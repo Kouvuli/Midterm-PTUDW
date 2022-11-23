@@ -1,0 +1,63 @@
+@media (max-width: 500px) {
+  .headerMenu {
+    display: none;
+  }
+  .group-card {
+    width: 300px;
+  }
+  .sider-group-menu {
+    display: none;
+  }
+}
+
+@media (min-width: 500px) {
+  .menuIcon {
+    display: none;
+  }
+  .group-card {
+    width: 400px;
+  }
+  .newGroupCard {
+    width: 500px;
+  }
+  .list-group-content {
+    margin: 0 0 0 13rem;
+  }
+  .group-menu {
+    display: none;
+  }
+  .sider-group-menu {
+    overflow: auto;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    z-index: 1000;
+  }
+}
+
+.top-nav-header {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.body-content {
+  margin-top: 3.5rem;
+}
+
+.group-image {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+}
+.group-card {
+  margin: 0.2em 1em 1em 1em;
+  width: 370px;
+  border: 1px solid black;
+}
+.group-card:hover {
+  filter: brightness(120%);
+}
