@@ -6,7 +6,7 @@ const GroupList = ({ groups, type }) => {
     <div>
       <Row>
         {groups.map((group) => (
-          <Col key={group.id}>
+          <Col justify="center" key={group.id}>
             {type === 'owned' ? (
               <OwnedGroup group={group} />
             ) : (

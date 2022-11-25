@@ -2,11 +2,35 @@
   .headerMenu {
     display: none;
   }
-  .group-card {
-    width: 300px;
+  .group-menu {
+    width: 100%;
   }
   .sider-group-menu {
     display: none;
+  }
+  .list-group-content {
+    margin: 6rem 0 0 0;
+  }
+  .group-detail-card {
+    width: 100vw;
+  }
+}
+
+@media (max-width: 300px) {
+  .headerMenu {
+    display: none;
+  }
+  .group-menu {
+    width: 100%;
+  }
+  .sider-group-menu {
+    display: none;
+  }
+  .list-group-content {
+    margin: 6rem 0 0 0;
+  }
+  .group-detail-card {
+    width: 100vw;
   }
 }
 
@@ -26,13 +50,6 @@
   .group-menu {
     display: none;
   }
-  .sider-group-menu {
-    overflow: auto;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    z-index: 1000;
-  }
 }
 
 .top-nav-header {
@@ -48,16 +65,41 @@
   margin-top: 3.5rem;
 }
 
-.group-image {
+.owned-group-image {
   border-radius: 50%;
-  width: 150px;
-  height: 150px;
+  width: 10em;
+  height: 10em;
 }
+
+.joined-group-image {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+  margin-top: 1em;
+}
+
 .group-card {
   margin: 0.2em 1em 1em 1em;
-  width: 370px;
+  width: 24em;
   border: 1px solid black;
 }
+
 .group-card:hover {
   filter: brightness(120%);
+}
+
+.my-footer {
+  position: fixed;
+  bottom: 0;
+  z-index: 1000;
+  color: white;
+  width: 100%;
+  left: 0;
+  text-align: center;
+  background: black;
+  font-size: 18px;
+}
+
+.group-detail-card {
+  width: 80vw;
 }

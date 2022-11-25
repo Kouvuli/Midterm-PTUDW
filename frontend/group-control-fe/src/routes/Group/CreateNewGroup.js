@@ -1,19 +1,22 @@
 import { Card } from 'antd';
-import GroupForm from '../components/form/GroupForm';
-import TopNavigationBar from '../components/nav/TopNavigationBar';
+import GroupForm from '../../components/form/GroupForm';
+import TopNavigationBar from '../../components/nav/TopNavigationBar';
 import { Layout } from 'antd';
 const { Header, Content } = Layout;
 const CreateNewGroup = () => {
   return (
     <Layout>
-      <Header className="top-nav-header" style={{ background: '#fff' }}>
+      <Header
+        className="top-nav-header"
+        style={{ background: '#fff', padding: 0 }}
+      >
         <TopNavigationBar />
       </Header>
 
       <Content>
         <div style={{ textAlign: 'center' }}>
           <Card
-            title="Create new group"
+            title={<h3>Create new group</h3>}
             style={{
               width: 340,
               border: '3px solid black',

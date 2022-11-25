@@ -1,9 +1,10 @@
-import GroupList from '../components/group/GroupList';
-import TopNavigationBar from '../components/nav/TopNavigationBar';
+import GroupList from '../../components/group/GroupList';
+import TopNavigationBar from '../../components/nav/TopNavigationBar';
 import { useState } from 'react';
 import { Menu, Layout } from 'antd';
-import '../App.css';
-const { Header, Content, Sider } = Layout;
+import '../../App.css';
+import MyFooter from '../../components/footer/MyFooter';
+const { Header, Content } = Layout;
 
 const ownedGroups = [
   {
@@ -110,22 +111,49 @@ const MyGroup = () => {
   };
   return (
     <Layout>
-      <Header className="top-nav-header" style={{ background: '#fff' }}>
+      <Header
+        className="top-nav-header"
+        style={{ background: '#fff', padding: 0 }}
+      >
         <TopNavigationBar />
       </Header>
       <Layout className="body-content">
-        <Menu
-          items={GroupsMenuOption}
-          onClick={(e) => handleGroupsMenu(e)}
-          selectedKeys={[currentSelected]}
-        ></Menu>
-
-        <Menu
+        <span
           className="group-menu"
-          items={GroupsMenuOption}
-          onClick={(e) => handleGroupsMenu(e)}
-          selectedKeys={[currentSelected]}
-        ></Menu>
+          style={{
+            position: 'fixed',
+            top: 60,
+            zIndex: 1000,
+            width: '100%',
+            left: 0,
+            margin: 0,
+          }}
+        >
+          <Menu
+            items={GroupsMenuOption}
+            onClick={(e) => handleGroupsMenu(e)}
+            selectedKeys={[currentSelected]}
+          ></Menu>
+        </span>
+
+        <div
+          className="sider-group-menu"
+          style={{
+            overflow: 'auto',
+            height: '100vh',
+            position: 'fixed',
+            left: 0,
+            zIndex: 1000,
+            width: 220,
+          }}
+        >
+          <Menu
+            items={GroupsMenuOption}
+            onClick={(e) => handleGroupsMenu(e)}
+            selectedKeys={[currentSelected]}
+          ></Menu>
+        </div>
+
         <Content className="list-group-content">
           <GroupList
             groups={groups}
@@ -133,6 +161,7 @@ const MyGroup = () => {
           />
         </Content>
       </Layout>
+      <MyFooter></MyFooter>
     </Layout>
   );
 };

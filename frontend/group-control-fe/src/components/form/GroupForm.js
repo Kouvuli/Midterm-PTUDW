@@ -1,10 +1,12 @@
 import { Button, Form, Input } from 'antd';
+const { TextArea } = Input;
+
 const GroupForm = () => {
   return (
     <Form
       name="basic"
       labelCol={{ span: 10 }}
-      wrapperCol={{ span: 16 }}
+      wrapperCol={{ span: 20 }}
       initialValues={{ remember: true }}
       autoComplete="off"
     >
@@ -15,10 +17,16 @@ const GroupForm = () => {
       >
         <Input />
       </Form.Item>
-
+      <Form.Item
+        label="Description"
+        name="groupdescription"
+        rules={[{ required: true, message: 'Describe your group!' }]}
+      >
+        <TextArea rows={4} />
+      </Form.Item>
       <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
         <Button type="primary" htmlType="submit">
-          Submit
+          Create
         </Button>
       </Form.Item>
     </Form>
