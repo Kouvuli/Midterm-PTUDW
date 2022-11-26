@@ -1,7 +1,10 @@
-import AppMenu from './AppMenu';
-import { Drawer } from 'antd';
-import { useState } from 'react';
-import { MenuOutlined } from '@ant-design/icons';
+import { useState } from "react";
+
+import { MenuOutlined } from "@ant-design/icons";
+import { Drawer } from "antd";
+
+import AppMenu from "./AppMenu";
+
 const TopNavigationBar = ({ user }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -15,12 +18,12 @@ const TopNavigationBar = ({ user }) => {
         <MenuOutlined style={{ fontSize: 40 }} />
       </div>
       <div className="headerMenu">
-        <AppMenu user={user} isInline={true} />
+        <AppMenu user={user} isInline />
       </div>
       <Drawer
         open={openDrawer}
         placement="left"
-        closable={true}
+        closable
         onClose={() => setOpenDrawer(false)}
       >
         <AppMenu />

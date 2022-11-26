@@ -1,14 +1,16 @@
-import { Layout, Menu } from 'antd';
-import MyFooter from '../../components/footer/MyFooter';
-import TopNavigationBar from '../../components/nav/TopNavigationBar';
-import { useState } from 'react';
-import DashBoardCard from '../../components/dashboard/DashBoardCard';
+import { useState } from "react";
+
+import { Layout, Menu } from "antd";
+
+import DashBoardCard from "../../components/dashboard/DashBoardCard";
+import MyFooter from "../../components/footer/MyFooter";
+import TopNavigationBar from "../../components/nav/TopNavigationBar";
 
 const { Header, Content } = Layout;
 const DashBoardItem = [
   {
-    label: 'My profile',
-    key: 'profile',
+    label: "My profile",
+    key: "profile",
   },
   {
     label: (
@@ -16,18 +18,18 @@ const DashBoardItem = [
         My Group
       </a>
     ),
-    key: 'myGroup',
+    key: "myGroup",
   },
 ];
 
 const user = {
-  username: 'vtvinh1412',
-  email: '123@gmail.com',
-  name: 'Vinh',
-  imgUrl: 'https://reqres.in/img/faces/12-image.jpg',
+  username: "vtvinh1412",
+  email: "123@gmail.com",
+  name: "Vinh",
+  imgUrl: "https://reqres.in/img/faces/12-image.jpg",
 };
 const DashBoard = () => {
-  const [currentSelected, setCurrentSelected] = useState('profile');
+  const [currentSelected, setCurrentSelected] = useState("profile");
 
   const handleDashBoardMenu = (e) => {
     setCurrentSelected(e.key);
@@ -36,7 +38,7 @@ const DashBoard = () => {
     <Layout>
       <Header
         className="top-nav-header"
-        style={{ background: '#fff', padding: 0 }}
+        style={{ background: "#fff", padding: 0 }}
       >
         <TopNavigationBar />
       </Header>
@@ -44,10 +46,10 @@ const DashBoard = () => {
         <span
           className="group-menu"
           style={{
-            position: 'fixed',
+            position: "fixed",
             top: 60,
             zIndex: 1000,
-            width: '100%',
+            width: "100%",
             left: 0,
             margin: 0,
           }}
@@ -57,15 +59,15 @@ const DashBoard = () => {
             items={DashBoardItem}
             onClick={(e) => handleDashBoardMenu(e)}
             selectedKeys={[currentSelected]}
-          ></Menu>
+          />
         </span>
 
         <div
           className="sider-group-menu"
           style={{
-            overflow: 'auto',
-            height: '100vh',
-            position: 'fixed',
+            overflow: "auto",
+            height: "100vh",
+            position: "fixed",
             left: 0,
             zIndex: 1000,
             width: 220,
@@ -76,14 +78,14 @@ const DashBoard = () => {
             items={DashBoardItem}
             onClick={(e) => handleDashBoardMenu(e)}
             selectedKeys={[currentSelected]}
-          ></Menu>
+          />
         </div>
 
         <Content className="list-group-content">
-          <DashBoardCard user={user}></DashBoardCard>
+          <DashBoardCard user={user} />
         </Content>
       </Layout>
-      <MyFooter></MyFooter>
+      <MyFooter />
     </Layout>
   );
 };

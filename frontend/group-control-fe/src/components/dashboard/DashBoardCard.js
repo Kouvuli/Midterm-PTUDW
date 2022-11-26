@@ -1,5 +1,6 @@
-import { Row, Button, Card, Form, Input } from 'antd';
-import { useState } from 'react';
+import { useState } from "react";
+
+import { Row, Button, Card, Form, Input } from "antd";
 
 const DashBoardCard = ({ user }) => {
   const [form] = Form.useForm();
@@ -10,7 +11,7 @@ const DashBoardCard = ({ user }) => {
       <Form
         layout="vertical"
         form={form}
-        initialValues={{ layout: 'vertical' }}
+        initialValues={{ layout: "vertical" }}
       >
         <Form.Item label="Username">
           <Input
@@ -30,8 +31,8 @@ const DashBoardCard = ({ user }) => {
           <img
             src={imgUrl}
             alt={`${name}-img`}
-            style={{ width: '15em', height: '15em' }}
-          ></img>
+            style={{ width: "15em", height: "15em" }}
+          />
           <Input
             placeholder="input placeholder"
             value={imgUrl}
@@ -50,10 +51,10 @@ const DashBoardCard = ({ user }) => {
         {updating ? (
           <Button
             type="primary"
-            style={{ width: '10em', height: '3em', fontSize: 18 }}
+            style={{ width: "10em", height: "3em", fontSize: 18 }}
             shape="round"
             onClick={() => {
-              //submit Form handle
+              // submit Form handle
               setUpdating(false);
             }}
           >
@@ -62,7 +63,7 @@ const DashBoardCard = ({ user }) => {
         ) : (
           <Button
             type="primary"
-            style={{ width: '10em', height: '3em', fontSize: 18 }}
+            style={{ width: "10em", height: "3em", fontSize: 18 }}
             shape="round"
             onClick={() => setUpdating(true)}
           >

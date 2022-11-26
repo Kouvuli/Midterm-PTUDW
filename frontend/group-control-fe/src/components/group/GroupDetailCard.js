@@ -1,9 +1,11 @@
-import { Card, Row, Button, Form, Input } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
-import { useState } from 'react';
-import '../../App.css';
+import { useState } from "react";
+
+import { Card, Row, Button, Form, Input } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import "../../App.css";
+
 const GroupDetailCard = ({ group, user }) => {
-  user = 'Vinh';
+  user = "Vinh";
   const [form] = Form.useForm();
   const { id, name, imgUrl, description, owner, total } = group;
   const [updating, setUpdating] = useState(false);
@@ -14,7 +16,7 @@ const GroupDetailCard = ({ group, user }) => {
           <Form
             layout="vertical"
             form={form}
-            initialValues={{ layout: 'vertical' }}
+            initialValues={{ layout: "vertical" }}
           >
             <Form.Item label="Name">
               <Input
@@ -27,8 +29,8 @@ const GroupDetailCard = ({ group, user }) => {
               <img
                 src={imgUrl}
                 alt={`${name}-img`}
-                style={{ width: '15em', height: '15em' }}
-              ></img>
+                style={{ width: "15em", height: "15em" }}
+              />
               <Input
                 placeholder="input placeholder"
                 value={imgUrl}
@@ -48,10 +50,10 @@ const GroupDetailCard = ({ group, user }) => {
             {updating ? (
               <Button
                 type="primary"
-                style={{ width: '10em', height: '3em', fontSize: 18 }}
+                style={{ width: "10em", height: "3em", fontSize: 18 }}
                 shape="round"
                 onClick={() => {
-                  //submit Form handle
+                  // submit Form handle
                   setUpdating(false);
                 }}
               >
@@ -60,7 +62,7 @@ const GroupDetailCard = ({ group, user }) => {
             ) : (
               <Button
                 type="primary"
-                style={{ width: '14em', height: '3em', fontSize: 18 }}
+                style={{ width: "14em", height: "3em", fontSize: 18 }}
                 shape="round"
                 onClick={() => setUpdating(true)}
               >
@@ -76,14 +78,14 @@ const GroupDetailCard = ({ group, user }) => {
               className="group-detail-card-img"
               src={imgUrl}
               alt={`${name}-img`}
-            ></img>
+            />
             <div className="group-short-info-text">
               <h4>Group name: {name}</h4>
               <p>Owner: {owner}</p>
               <p>Total: {total} people</p>
             </div>
           </div>
-          <p style={{ marginTop: '2em', fontSize: '1.5em' }}>
+          <p style={{ marginTop: "2em", fontSize: "1.5em" }}>
             Detail: {description}
           </p>
         </>

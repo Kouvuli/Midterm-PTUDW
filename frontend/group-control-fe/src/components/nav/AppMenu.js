@@ -1,6 +1,7 @@
-import { Menu } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
-import '../../App.css';
+import { HomeOutlined } from "@ant-design/icons";
+import { Menu } from "antd";
+import "../../App.css";
+
 const loggedInItems = [
   {
     label: (
@@ -8,7 +9,7 @@ const loggedInItems = [
         Home
       </a>
     ),
-    key: 'home',
+    key: "home",
     icon: <HomeOutlined style={{ fontSize: 24 }} />,
   },
   {
@@ -17,7 +18,7 @@ const loggedInItems = [
         Create Group
       </a>
     ),
-    key: 'createGroup',
+    key: "createGroup",
   },
   {
     label: (
@@ -25,7 +26,7 @@ const loggedInItems = [
         My Group
       </a>
     ),
-    key: 'myGroup',
+    key: "myGroup",
   },
   {
     label: (
@@ -33,7 +34,7 @@ const loggedInItems = [
         Dashboard
       </a>
     ),
-    key: 'dashboard',
+    key: "dashboard",
   },
 ];
 const loggedOutItems = [
@@ -43,12 +44,12 @@ const loggedOutItems = [
         Home
       </a>
     ),
-    key: 'home',
+    key: "home",
     icon: <HomeOutlined />,
   },
   {
-    label: 'Sign in',
-    key: 'signIn',
+    label: "Sign in",
+    key: "signIn",
   },
 ];
 
@@ -57,7 +58,7 @@ const AppMenu = ({ user, isInline }) => {
   return (
     <Menu
       items={user ? loggedInItems : loggedOutItems}
-      mode={isInline ? 'horizontal' : 'vertical'}
+      mode={isInline ? "horizontal" : "vertical"}
       style={{ fontSize: 20 }}
     />
   );

@@ -1,4 +1,2 @@
-const Error = () => {
-    return 
-};
+const Error = () => {};
 export default Error;
