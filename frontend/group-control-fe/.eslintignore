@@ -1,0 +1,35 @@
+# Ignore artifacts: 
+postcss.config.js
+tailwind.config.js
+vite.config.ts
+
+
+# styles:
+**/*.css
+**/*.scss
+**/*.sass
+**/*.less
+**/*.styl
+**/*.pcss
+**/*.postcss
+**/*.sss
+
+# assets:
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg
+**/*.ico
+**/*.eot
+**/*.ttf
+**/*.woff
+**/*.woff2
+**/*.otf
+**/*.mp4
+**/*.webm
+**/*.wav
+**/*.mp3
+**/*.m4a
+**/*.aac
+**/*.oga
