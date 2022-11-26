@@ -5,6 +5,7 @@ import CreateNewGroup from './routes/Group/CreateNewGroup';
 import MyGroup from './routes/Group/MyGroup';
 import GroupDetail from './routes/Group/GroupDetail';
 import './App.css';
+import DashBoard from './routes/Dashboard/DashBoard';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route exact path="/home" element={<Home />}></Route>
         <Route exact path="/createGroup" element={<CreateNewGroup />}></Route>
         <Route exact path="/myGroup" element={<MyGroup />}></Route>
+        <Route exact path="/dashboard" element={<DashBoard />}></Route>
         <Route path="/group">
           <Route path=":groupId" element={<GroupDetail />}></Route>
         </Route>

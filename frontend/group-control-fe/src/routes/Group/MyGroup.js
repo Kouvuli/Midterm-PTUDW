@@ -130,6 +130,7 @@ const MyGroup = () => {
           }}
         >
           <Menu
+            style={{ fontSize: 18 }}
             items={GroupsMenuOption}
             onClick={(e) => handleGroupsMenu(e)}
             selectedKeys={[currentSelected]}
@@ -148,6 +149,7 @@ const MyGroup = () => {
           }}
         >
           <Menu
+            style={{ fontSize: 18 }}
             items={GroupsMenuOption}
             onClick={(e) => handleGroupsMenu(e)}
             selectedKeys={[currentSelected]}

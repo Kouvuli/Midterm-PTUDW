@@ -6,7 +6,7 @@ const TopNavigationBar = ({ user }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   return (
-    <>
+    <div className="top-nav-bar">
       <div
         style={{ height: 60, paddingLeft: 12, paddingTop: 12 }}
         className="menuIcon"
@@ -25,7 +25,7 @@ const TopNavigationBar = ({ user }) => {
       >
         <AppMenu />
       </Drawer>
-    </>
+    </div>
   );
 };
 export default TopNavigationBar;

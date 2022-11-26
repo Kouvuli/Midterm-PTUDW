@@ -9,7 +9,7 @@ const loggedInItems = [
       </a>
     ),
     key: 'home',
-    icon: <HomeOutlined />,
+    icon: <HomeOutlined style={{ fontSize: 24 }} />,
   },
   {
     label: (
@@ -26,6 +26,14 @@ const loggedInItems = [
       </a>
     ),
     key: 'myGroup',
+  },
+  {
+    label: (
+      <a href="/dashboard" target="" rel="noopener noreferrer">
+        Dashboard
+      </a>
+    ),
+    key: 'dashboard',
   },
 ];
 const loggedOutItems = [
@@ -50,6 +58,7 @@ const AppMenu = ({ user, isInline }) => {
     <Menu
       items={user ? loggedInItems : loggedOutItems}
       mode={isInline ? 'horizontal' : 'vertical'}
+      style={{ fontSize: 20 }}
     />
   );
 };

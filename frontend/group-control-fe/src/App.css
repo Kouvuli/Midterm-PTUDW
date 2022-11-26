@@ -1,4 +1,4 @@
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .headerMenu {
     display: none;
   }
@@ -34,7 +34,7 @@
   }
 }
 
-@media (min-width: 500px) {
+@media (min-width: 600px) {
   .menuIcon {
     display: none;
   }
@@ -50,8 +50,11 @@
   .group-menu {
     display: none;
   }
+  .group-short-info {
+    display: flex;
+  }
 }
-
+/* header footer body*/
 .top-nav-header {
   position: fixed;
   width: 100%;
@@ -61,14 +64,33 @@
   z-index: 1000;
 }
 
+.my-footer {
+  position: fixed;
+  bottom: 0;
+  z-index: 1000;
+  color: white;
+  width: 100%;
+  left: 0;
+  text-align: center;
+  background: black;
+  font-size: 18px;
+}
+
 .body-content {
   margin-top: 3.5rem;
 }
 
+/* img */
 .owned-group-image {
   border-radius: 50%;
   width: 10em;
   height: 10em;
+}
+
+.group-detail-card-img {
+  border-radius: 50%;
+  height: 22em;
+  width: 22em;
 }
 
 .joined-group-image {
@@ -88,18 +110,14 @@
   filter: brightness(120%);
 }
 
-.my-footer {
-  position: fixed;
-  bottom: 0;
-  z-index: 1000;
-  color: white;
-  width: 100%;
-  left: 0;
-  text-align: center;
-  background: black;
-  font-size: 18px;
+.group-short-info-text {
+  padding-left: 1.2em;
+  padding-top: 1em;
+  font-size: 1.5em;
 }
-
-.group-detail-card {
-  width: 80vw;
+.group-description-text {
+  font-size: 0.8em;
+}
+.member-card {
+  margin: 0.5rem;
 }

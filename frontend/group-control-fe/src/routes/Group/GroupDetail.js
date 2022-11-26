@@ -86,6 +86,7 @@ const GroupDetail = () => {
           }}
         >
           <Menu
+            style={{ fontSize: 18 }}
             items={GroupDetailMenuOption}
             onClick={(e) => handleGroupMenuDetail(e)}
             selectedKeys={[currentSelected]}
@@ -104,6 +105,7 @@ const GroupDetail = () => {
           }}
         >
           <Menu
+            style={{ fontSize: 18 }}
             items={GroupDetailMenuOption}
             onClick={(e) => handleGroupMenuDetail(e)}
             selectedKeys={[currentSelected]}
