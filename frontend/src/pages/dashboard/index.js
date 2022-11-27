@@ -1,12 +1,24 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'umi'
-import { Row, Col, Card } from 'antd'
+import { Row, Col, Card, Button } from 'antd'
 import { Color } from 'utils'
 import { Page, ScrollBar } from 'components'
-import { Form, Input, InputNumber, Radio, Button } from 'antd'
+import { Form, Input, InputNumber, Radio, Cascader } from 'antd'
 import { Trans } from '@lingui/macro'
 import { t } from '@lingui/macro'
+import {
+  NumberCard,
+  Quote,
+  Sales,
+  Weather,
+  RecentSales,
+  Comments,
+  Completed,
+  Browser,
+  Cpu,
+  User,
+} from './components'
 import styles from './index.less'
 import store from 'store'
 const FormItem = Form.Item
@@ -30,15 +42,45 @@ const formItemLayout = {
   loading,
 }))
 class Dashboard extends PureComponent {
+  handleUpdateBtn() {
+    this.setState({
+      updating: true,
+    })
+  }
+
+  handleUpdateConfirmBtn() {
+    // handle Form send
+    this.setState({
+      updating: false,
+    })
+  }
+  constructor(props) {
+    super(props)
+    this.state = {
+      updating: false,
+      //user: this.props.user,
+      user: {
+        name: 'Vinh',
+        isMale: true,
+        email: '123@gmail.com',
+        phone: '012345678',
+        age: 22,
+      },
+    }
+  }
   render() {
     const userDetail = store.get('user')
-    const { avatar, username } = userDetail
     const { dashboard, loading } = this.props
     const { user } = dashboard
 
     return (
       <>
-        <Form ref={this.formRef} name="control-ref" layout="horizontal">
+        <Form
+          ref={this.formRef}
+          name="control-ref"
+          layout="horizontal"
+          initialValues={this.state.user}
+        >
           <h1 style={{ textAlign: 'center' }}>Your profile</h1>
           <FormItem
             name="name"
@@ -47,9 +89,8 @@ class Dashboard extends PureComponent {
             hasFeedback
             {...formItemLayout}
           >
-            <Input />
+            <Input disabled={!this.state.updating} />
           </FormItem>
-
           <FormItem
             name="isMale"
             rules={[{ required: true }]}
@@ -57,7 +98,7 @@ class Dashboard extends PureComponent {
             hasFeedback
             {...formItemLayout}
           >
-            <Radio.Group>
+            <Radio.Group disabled={!this.state.updating}>
               <Radio value>
                 <Trans>Male</Trans>
               </Radio>
@@ -67,7 +108,7 @@ class Dashboard extends PureComponent {
             </Radio.Group>
           </FormItem>
           <FormItem name="age" label={t`Age`} hasFeedback {...formItemLayout}>
-            <InputNumber min={18} max={100} />
+            <InputNumber min={18} max={100} disabled={!this.state.updating} />
           </FormItem>
           <FormItem
             name="phone"
@@ -82,7 +123,7 @@ class Dashboard extends PureComponent {
             hasFeedback
             {...formItemLayout}
           >
-            <Input />
+            <Input disabled={!this.state.updating} />
           </FormItem>
           <FormItem
             name="email"
@@ -97,13 +138,27 @@ class Dashboard extends PureComponent {
             hasFeedback
             {...formItemLayout}
           >
-            <Input />
+            <Input disabled={!this.state.updating} />
           </FormItem>
         </Form>
         <Row justify="center">
-          <Button size="large" type="primary">
-            Update
-          </Button>
+          {this.state.updating === true ? (
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => this.handleUpdateConfirmBtn()}
+            >
+              Confirm update
+            </Button>
+          ) : (
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => this.handleUpdateBtn()}
+            >
+              Update
+            </Button>
+          )}
         </Row>
       </>
     )
