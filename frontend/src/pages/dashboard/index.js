@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'umi'
-import { Row, Col, Card, Button } from 'antd'
+import { Row, Col, Card, Button, DatePicker } from 'antd'
 import { Color } from 'utils'
 import { Page, ScrollBar } from 'components'
 import { Form, Input, InputNumber, Radio, Cascader } from 'antd'
 import { Trans } from '@lingui/macro'
 import { t } from '@lingui/macro'
+import dayjs from 'dayjs'
 import {
   NumberCard,
   Quote,
@@ -65,6 +66,7 @@ class Dashboard extends PureComponent {
         email: '123@gmail.com',
         phone: '012345678',
         age: 22,
+        birthday: dayjs('12/14/2000'),
       },
     }
   }
@@ -107,8 +109,13 @@ class Dashboard extends PureComponent {
               </Radio>
             </Radio.Group>
           </FormItem>
-          <FormItem name="age" label={t`Age`} hasFeedback {...formItemLayout}>
-            <InputNumber min={18} max={100} disabled={!this.state.updating} />
+          <FormItem
+            name="birthday"
+            label={t`Birthday`}
+            hasFeedback
+            {...formItemLayout}
+          >
+            <DatePicker disabled={!this.state.updating} />
           </FormItem>
           <FormItem
             name="phone"
