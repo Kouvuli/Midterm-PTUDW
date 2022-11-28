@@ -78,7 +78,7 @@ const database = [
       name: 'Joined Groups'
     },
     icon: 'bar-chart',
-    route: '/group',
+    route: '/joined',
   },
   {
     id: '53',

@@ -6,12 +6,13 @@ import { Row, Col, Button, Popconfirm } from 'antd'
 import { t } from '@lingui/macro'
 import { Page } from 'components'
 import { stringify } from 'qs'
-import List from './components/List'
-import Filter from './components/Filter'
-import Modal from './components/Modal'
+import UserList from '../components/UserList'
+import UserFilter from '../components/UserFilter'
+import UserModal from '../components/UserModal'
+import styles from './index.less'
 
-@connect(({ group, loading }) => ({ group, loading }))
-class Group extends PureComponent {
+@connect(({ groupDetail, loading }) => ({ groupDetail, loading }))
+class GroupDetail extends PureComponent {
   handleRefresh = (newQuery) => {
     const { location } = this.props
     const { query, pathname } = location
@@ -28,12 +29,11 @@ class Group extends PureComponent {
     })
   }
 
-  handleDeleteItems = () => {
-    const { dispatch, group } = this.props
-    const { list, pagination, selectedRowKeys } = group
-
+  handleDeleteUserItems = () => {
+    const { dispatch, groupDetail } = this.props
+    const { list, pagination, selectedRowKeys } = groupDetail
     dispatch({
-      type: 'group/multiDelete',
+      type: 'groupDetail/multiDelete',
       payload: {
         ids: selectedRowKeys,
       },
@@ -47,21 +47,21 @@ class Group extends PureComponent {
     })
   }
 
-  get modalProps() {
-    const { dispatch, group, loading } = this.props
-    const { currentItem, modalOpen, modalType } = group
+  get userModalProps() {
+    const { dispatch, groupDetail, loading } = this.props
+    const { currentItem, modalOpen, modalType } = groupDetail
 
     return {
       item: modalType === 'create' ? {} : currentItem,
       open: modalOpen,
       destroyOnClose: true,
       maskClosable: false,
-      confirmLoading: loading.effects[`group/${modalType}`],
-      title: `${modalType === 'create' ? t`Create Group` : t`Update Group`}`,
+      confirmLoading: loading.effects[`groupDetail/${modalType}`],
+      title: `${modalType === 'create' ? t`Create User` : t`Update User`}`,
       centered: true,
       onOk: (data) => {
         dispatch({
-          type: `group/${modalType}`,
+          type: `groupDetail/${modalType}`,
           payload: data,
         }).then(() => {
           this.handleRefresh()
@@ -69,19 +69,20 @@ class Group extends PureComponent {
       },
       onCancel() {
         dispatch({
-          type: 'group/hideModal',
+          type: 'groupDetail/hideModal',
         })
       },
     }
   }
 
-  get listProps() {
-    const { dispatch, group, loading } = this.props
-    const { list, pagination, selectedRowKeys } = group
+  get userListProps() {
+    const { dispatch, groupDetail, loading } = this.props
+
+    const { list, pagination, selectedRowKeys } = groupDetail
 
     return {
       dataSource: list,
-      loading: loading.effects['group/query'],
+      loading: loading.effects['groupDetail/queryUserList'],
       pagination,
       onChange: (page) => {
         this.handleRefresh({
@@ -91,7 +92,7 @@ class Group extends PureComponent {
       },
       onDeleteItem: (id) => {
         dispatch({
-          type: 'group/delete',
+          type: 'groupDetail/delete',
           payload: id,
         }).then(() => {
           this.handleRefresh({
@@ -104,7 +105,7 @@ class Group extends PureComponent {
       },
       onEditItem(item) {
         dispatch({
-          type: 'group/showModal',
+          type: 'groupDetail/showModal',
           payload: {
             modalType: 'update',
             currentItem: item,
@@ -115,7 +116,7 @@ class Group extends PureComponent {
         selectedRowKeys,
         onChange: (keys) => {
           dispatch({
-            type: 'group/updateState',
+            type: 'groupDetail/updateState',
             payload: {
               selectedRowKeys: keys,
             },
@@ -125,7 +126,7 @@ class Group extends PureComponent {
     }
   }
 
-  get filterProps() {
+  get userFilterProps() {
     const { location, dispatch } = this.props
     const { query } = location
 
@@ -140,7 +141,7 @@ class Group extends PureComponent {
       },
       onAdd() {
         dispatch({
-          type: 'group/showModal',
+          type: 'groupDetail/showModal',
           payload: {
             modalType: 'create',
           },
@@ -150,13 +151,33 @@ class Group extends PureComponent {
   }
 
   render() {
-    const { group } = this.props
-    const { selectedRowKeys } = group
-    console.log(this.props)
+    const { groupDetail } = this.props
+    const { data, selectedRowKeys } = groupDetail
+    const content = []
 
-    return (
-      <Page inner>
-        <Filter {...this.filterProps} />
+    for (let key in data) {
+      if ({}.hasOwnProperty.call(data, key)) {
+        if (key === 'image') {
+          content.push(
+            <div key={key} className={styles.item}>
+              <div className={styles.title}>{key}</div>
+              <img src={data[key]} alt="" />
+            </div>
+          )
+        } else {
+          content.push(
+            <div key={key} className={styles.item}>
+              <div className={styles.title}>{key}</div>
+              <div>{String(data[key])}</div>
+            </div>
+          )
+        }
+      }
+    }
+    content.push(
+      <div>
+        <div className={styles.title}>Users in group</div>
+        <UserFilter {...this.userFilterProps} />
         {selectedRowKeys.length > 0 && (
           <Row style={{ marginBottom: 24, textAlign: 'right', fontSize: 13 }}>
             <Col>
@@ -164,7 +185,7 @@ class Group extends PureComponent {
               <Popconfirm
                 title="Are you sure delete these items?"
                 placement="left"
-                onConfirm={this.handleDeleteItems}
+                onConfirm={this.handleDeleteUserItems}
               >
                 <Button type="primary" style={{ marginLeft: 8 }}>
                   Remove
@@ -173,18 +194,23 @@ class Group extends PureComponent {
             </Col>
           </Row>
         )}
-        <List {...this.listProps} />
-        <Modal {...this.modalProps} />
+        <UserList {...this.userListProps} />
+        <UserModal {...this.userModalProps} />
+      </div>
+    )
+    return (
+      <Page inner>
+        <div className={styles.content}>{content}</div>
       </Page>
     )
   }
 }
 
-Group.propTypes = {
-  group: PropTypes.object,
+GroupDetail.propTypes = {
+  groupDetail: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.object,
 }
 
-export default Group
+export default GroupDetail
