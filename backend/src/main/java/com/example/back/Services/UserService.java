@@ -1,6 +1,7 @@
 package com.example.back.Services;
 
 
+import com.example.back.Entities.Group;
 import com.example.back.Entities.User;
 import com.example.back.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,11 @@ public class UserService {
 
     public void enableUser(String email){
 
+    }
+
+    public void deleteById(Long id) {
+        User user=userRepository.findById(id).get();
+        user.setLock(true);
+        addUser(user);
     }
 }

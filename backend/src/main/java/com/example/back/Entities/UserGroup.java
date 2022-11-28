@@ -9,17 +9,16 @@ import java.sql.Timestamp;
 @Table(name = "user_group")
 public class UserGroup {
 
-    @EmbeddedId
-    UserGroupKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User user;
 
     @ManyToOne
-    @MapsId("groupId")
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id",referencedColumnName = "id")
     private Group group;
 
     @ManyToOne
@@ -29,18 +28,17 @@ public class UserGroup {
     public UserGroup() {
     }
 
-    public UserGroup(UserGroupKey id, User user, Group group, Role role) {
-        this.id = id;
-        this.user = user;
-        this.group = group;
-        this.role = role;
-    }
+//    public UserGroup(User user, Group group, Role role) {
+//        this.user = user;
+//        this.group = group;
+//        this.role = role;
+//    }
 
-    public UserGroupKey getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UserGroupKey id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

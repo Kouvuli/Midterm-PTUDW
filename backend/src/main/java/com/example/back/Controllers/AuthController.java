@@ -1,5 +1,6 @@
 package com.example.back.Controllers;
 
+import com.example.back.Constants.Constants;
 import com.example.back.Entities.ConfirmationToken;
 import com.example.back.Entities.User;
 import com.example.back.Payloads.request.LoginRequest;
@@ -129,10 +130,11 @@ public class AuthController {
         confirmationTokenService.saveConfirmationToken(
                 confirmationToken);
 
-        String link = "http://localhost:9090/api/v1/registration/confirm?token=" + token;
+        String link = Constants.BACK_BASE_URL+"/auth/confirm?token=" + token;
+//        System.out.println(link);
         emailService.send(
                 signUpRequest.getEmail(),
-                emailService.buildEmail(signUpRequest.getFullname(), link));
+                emailService.buildVerificationBody(signUpRequest.getFullname(), link),"Verify your email");
         return ResponseEntity.ok(new ResponeObject("ok","User registered successfully!",""));
     }
 

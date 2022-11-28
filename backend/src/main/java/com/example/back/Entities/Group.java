@@ -17,6 +17,7 @@ public class Group {
 
     private String name;
 
+    private boolean lock=false;
     @Column(name = "create_at")
     private Timestamp createAt;
     @ManyToOne
@@ -24,22 +25,34 @@ public class Group {
     private User admin;
 
 
-    @ManyToMany(mappedBy = "userGroup")
-    private Set<User> users = new HashSet<>();
+//    @ManyToMany(mappedBy = "userGroup")
+//    private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "group")
     @JsonIgnore
     Set<UserGroup> roles=new HashSet<>();
+
+    @OneToMany(mappedBy = "group")
+    @JsonIgnore
+    Set<InvitationToken> tokens=new HashSet<>();
     public Group() {
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public boolean isLock() {
+        return lock;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setLock(boolean lock) {
+        this.lock = lock;
     }
+
+//    public Set<User> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(Set<User> users) {
+//        this.users = users;
+//    }
 
     public Set<UserGroup> getRoles() {
         return roles;

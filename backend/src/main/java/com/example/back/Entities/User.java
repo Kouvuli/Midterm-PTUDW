@@ -31,9 +31,9 @@ public class User {
     @Column(name = "create_at")
     private Timestamp createAt;
 
-    @ManyToMany
-    @JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private Set<Group> userGroup = new HashSet<>();
+//    @ManyToMany
+//    @JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
+//    private Set<Group> userGroup = new HashSet<>();
 
     @OneToMany(mappedBy = "admin")
     @JsonIgnore
@@ -90,13 +90,13 @@ public class User {
         this.createAt = createAt;
     }
 
-    public Set<Group> getUserGroup() {
-        return userGroup;
-    }
-
-    public void setUserGroup(Set<Group> userGroup) {
-        this.userGroup = userGroup;
-    }
+//    public Set<Group> getUserGroup() {
+//        return userGroup;
+//    }
+//
+//    public void setUserGroup(Set<Group> userGroup) {
+//        this.userGroup = userGroup;
+//    }
 
     public Set<Group> getOwnGroup() {
         return ownGroup;

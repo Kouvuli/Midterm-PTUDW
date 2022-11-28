@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 
 
 @Service
@@ -28,6 +29,7 @@ public class GroupService {
     private RoleRepository roleRepository;
 
 
+
     public Page<Group> getGroup(Pageable pageable){
         return groupRepository.findAll(pageable);
     }
@@ -35,7 +37,9 @@ public class GroupService {
             return groupRepository.existsById(id);
     }
     public void deleteById(Long id){
-        groupRepository.deleteById(id);
+        Group group=groupRepository.findById(id).get();
+        group.setLock(true);
+        addGroup(group);
     }
     public Optional<Group> getGroupById(Long id){
         return groupRepository.findById(id);
@@ -44,11 +48,14 @@ public class GroupService {
         return groupRepository.findGroupByName(name);
     }
 
-    public User getUserById(Long id){
-        return userRepository.findById(id).get();
+    public Optional<User> getUserById(Long id){
+        return userRepository.findById(id);
     }
-    public Optional<UserGroup> getUserGroupById(UserGroupKey id){
+    public Optional<UserGroup> getUserGroupById(Long id){
         return userGroupRepository.findById(id);
+    }
+    public Optional<UserGroup> getUserGroupByUserIdAndGroupId(Long userId,Long groupId){
+        return userGroupRepository.findByUserAndGroup(userId,groupId);
     }
     public Role getRoleById(Long id){
         return roleRepository.findById(id).get();
@@ -59,5 +66,20 @@ public class GroupService {
 
     public UserGroup addGroupMember(UserGroup data){
         return userGroupRepository.save(data);
+    }
+
+    public String genRandomAlphaNumeric(int length){
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(length)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
     }
 }

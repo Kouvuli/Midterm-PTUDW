@@ -1,5 +1,6 @@
 package com.example.back.Controllers;
 
+
 import com.example.back.Entities.User;
 import com.example.back.Payloads.request.Pagination;
 import com.example.back.Payloads.response.ResponeObject;
@@ -50,7 +51,46 @@ public class UserController {
                         new ResponeObject("failed","Cannot find account with id="+id,"")
                 );
     }
+    @PutMapping("/{id}")
+    ResponseEntity<ResponeObject> updateUser(@RequestBody User newUser, @PathVariable Long id){
+        Optional<User> user= userService.getUserById(id);
+        if(!user.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponeObject("failed","User not exists!","")
+            );
+        }
 
+
+        if(user.get().isLock()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(
+                    new ResponeObject("failed","User is locked!",user.get())
+            );
+        }
+        user.get().setFullname(newUser.getFullname());
+        user.get().setBirthday(newUser.getBirthday());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponeObject("ok","Update user successfully",userService.addUser(user.get()))
+        );
+    }
+    @DeleteMapping("/{id}")
+    ResponseEntity<ResponeObject> deleteUser(@PathVariable Long id){
+        Optional<User> user= userService.getUserById(id);
+        if(!user.isPresent()){
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponeObject("failed","Cannot find user to delete","")
+            );
+        }
+        if(user.get().isLock()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(
+                    new ResponeObject("failed","User is locked!",user.get())
+            );
+        }
+        userService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponeObject("ok","Deleted user succesfully","")
+        );
+    }
 
 
 

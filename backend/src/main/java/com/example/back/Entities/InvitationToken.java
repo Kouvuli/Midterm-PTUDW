@@ -4,9 +4,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "confirmation_token")
-public class ConfirmationToken {
-
+@Table(name = "invitation_token")
+public class InvitationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,24 +18,26 @@ public class ConfirmationToken {
 
     @Column(name = "expired_at",nullable = false)
     private LocalDateTime expiredAt;
-    @Column(name = "confirmed_at")
-    private LocalDateTime confirmedAt;
+
+    @Column(name = "is_used")
+    private boolean isUsed=false;
 
     @ManyToOne
     @JoinColumn(
             nullable = false,
-            name = "user_id"
+            name = "group_id"
     )
-    private User user;
+    private Group group;
 
-    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, User user) {
+    public InvitationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, Group group) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiredAt = expiredAt;
-        this.user = user;
+        this.group = group;
     }
 
-    public ConfirmationToken() {
+    public InvitationToken() {
+
     }
 
     public Long getId() {
@@ -71,19 +72,19 @@ public class ConfirmationToken {
         this.expiredAt = expiredAt;
     }
 
-    public LocalDateTime getConfirmedAt() {
-        return confirmedAt;
+    public boolean isUsed() {
+        return isUsed;
     }
 
-    public void setConfirmedAt(LocalDateTime confirmedAt) {
-        this.confirmedAt = confirmedAt;
+    public void setUsed(boolean used) {
+        isUsed = used;
     }
 
-    public User getUser() {
-        return user;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }
