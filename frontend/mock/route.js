@@ -93,6 +93,19 @@ const database = [
     },
     route: '/group/:id',
   },
+  {
+    id: '54',
+    menuParentId: '-1',
+    breadcrumbParentId: '2',
+    name: 'Joined Group Detail',
+    zh: {
+      name: 'Joined Group Detail'
+    },
+    'pt-br': {
+      name: 'Joined Group Detail'
+    },
+    route: '/joinedgroup/:id',
+  },
 ]
 
 module.exports = {

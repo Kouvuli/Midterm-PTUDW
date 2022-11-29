@@ -14,13 +14,19 @@ export default {
 
   queryPostList: '/posts',
 
-  queryGroupInfo: '/group',
   queryGroup: '/group/:id',
   queryGroupList: '/groups',
   updateGroup: 'Patch /group/:id',
   createGroup: 'POST /group',
   removeGroup: 'DELETE /group/:id',
   removeGroupList: 'POST /groups/delete',
+
+  queryJoinedGroup: '/group/:id',
+  queryJoinedGroupList: '/groups',
+  updateJoinedGroup: 'Patch /group/:id',
+  createJoinedGroup: 'POST /group',
+  removeJoinedGroup: 'DELETE /group/:id',
+  removeJoinedGroupList: 'POST /groups/delete',
 
   queryDashboard: '/dashboard',
 }
