@@ -1,5 +1,6 @@
 package com.example.back.Services;
 
+import com.example.back.Constants.Constants;
 import com.example.back.Interfaces.EmailSender;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,7 +25,7 @@ public class EmailService implements EmailSender {
     public void send(String to, String body,String subject) {
 
         SimpleMailMessage mess=new SimpleMailMessage();
-        mess.setFrom("ldtam.110201@gmail.com");
+        mess.setFrom(Constants.SENDER);
         mess.setTo(to);
         mess.setText(body);
         mess.setSubject(subject);
