@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = 'https://midterm-ptudw-production.up.railway.app'
+import baseConfig from './config'
+const { token, baseUrl } = baseConfig
 
 const getUserById = async (id) => {
   const url = `${baseUrl}/${id}`

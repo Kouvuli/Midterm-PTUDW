@@ -8,6 +8,8 @@ import { Button, Row, Col, DatePicker, Form, Input, Cascader } from 'antd'
 import city from 'utils/city'
 import invitationService from '../../../services/invitation'
 import userService from '../../../services/user'
+import store from 'store'
+
 const { Search } = Input
 const { RangePicker } = DatePicker
 
@@ -45,7 +47,8 @@ class Filter extends Component {
     const link = this.state.invitationLink
     invitationService.getGroupInfoFromInvitation(link).then((res) => {
       const group = res.data
-      const userId = window.localStorage.getItem('userId')
+      const auth = store.get('auth')
+      const { id: userId } = auth
       userService
         .addUserToGroup(userId, group.id)
         .then((res) => {

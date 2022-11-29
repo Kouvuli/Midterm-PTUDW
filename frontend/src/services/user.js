@@ -1,6 +1,7 @@
 import axios from 'axios'
-const token = '' //window.localStorage.getItem('userToken')
-const baseUrl = 'https://midterm-ptudw-production.up.railway.app'
+import baseConfig from './config'
+const { token, baseUrl } = baseConfig
+
 const updateUser = async (id, updatedUser) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },

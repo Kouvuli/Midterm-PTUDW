@@ -1,6 +1,6 @@
 import axios from 'axios'
-const token = '' //window.localStorage.getItem('userToken')
-const baseUrl = 'https://midterm-ptudw-production.up.railway.app'
+import baseConfig from './config'
+const { token, baseUrl } = baseConfig
 
 const login = async ({ username, password }) => {
   const config = {

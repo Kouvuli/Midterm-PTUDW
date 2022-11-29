@@ -10,6 +10,7 @@ import List from './components/List'
 import Filter from './components/Filter'
 import Modal from './components/Modal'
 import groupService from '../../services/group'
+import store from 'store'
 
 @connect(({ group, loading }) => ({ group, loading }))
 class Group extends PureComponent {
@@ -21,7 +22,8 @@ class Group extends PureComponent {
   }
 
   componentDidMount() {
-    const id = window.localStorage.getItem('userId')
+    const auth = store.get('auth')
+    const { id } = auth
     groupService
       .getOwnedGroupByUserId(id)
       .then((res) => {

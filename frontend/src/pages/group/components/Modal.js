@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Form, Input, InputNumber, Radio, Modal, Cascader } from 'antd'
 import { Trans } from '@lingui/macro'
 import city from 'utils/city'
+import store from 'store'
 import { t } from '@lingui/macro'
 import groupService from '../../../services/group'
 const FormItem = Form.Item
@@ -35,7 +36,8 @@ class GroupModal extends PureComponent {
     //     console.log(errorInfo)
     //   })
     const groupName = this.formRef.current.getFieldValue('name')
-    const userId = window.localStorage.getItem('userId')
+    const auth = store.get('auth')
+    const { id: userId } = auth
     groupService
       .createGroup(userId, { name: groupName })
       .then((res) => {
