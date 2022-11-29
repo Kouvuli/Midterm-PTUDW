@@ -1,6 +1,7 @@
 package com.example.back.Controllers;
 
 
+import com.example.back.Entities.Group;
 import com.example.back.Entities.User;
 import com.example.back.Payloads.request.Pagination;
 import com.example.back.Payloads.response.ResponeObject;
@@ -13,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin(origins="*",maxAge = 3600)
 @RestController
@@ -45,11 +48,42 @@ public class UserController {
         Optional<User> user= userService.getUserById(id);
         return user.isPresent()?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponeObject("ok","Query account succesfully",user)
+                        new ResponeObject("ok","Query user succesfully",user)
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponeObject("failed","Cannot find account with id="+id,"")
+                        new ResponeObject("failed","Cannot find user with id="+id,"")
                 );
+    }
+
+    @GetMapping("/{id}/ownGroups")
+    ResponseEntity<ResponeObject> getUserOwnedGroupById(@PathVariable Long id){
+        Optional<User> user= userService.getUserById(id);
+        return user.isPresent()?
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponeObject("ok","Query succesfully",user.get().getOwnGroup())
+                ):
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponeObject("failed","Cannot find user with id="+id,"")
+                );
+    }
+    @GetMapping("/{id}/groups")
+    ResponseEntity<ResponeObject> getUserGroupById(@PathVariable Long id){
+        Optional<User> user= userService.getUserById(id);
+        if(!user.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponeObject("failed","Cannot find user with id="+id,"")
+            );
+        }
+        Set<Group> returnGroups=new HashSet<>();
+        user.get().getRoles().forEach(userGroup -> {
+            if(userGroup.getRole().getId()!=4){
+                returnGroups.add(userGroup.getGroup());
+            }
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponeObject("ok","Query succesfully",returnGroups)
+                );
+
     }
     @PutMapping("/{id}")
     ResponseEntity<ResponeObject> updateUser(@RequestBody User newUser, @PathVariable Long id){
