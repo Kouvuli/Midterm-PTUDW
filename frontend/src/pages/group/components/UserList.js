@@ -12,37 +12,21 @@ const { confirm } = Modal
 class UserList extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = {
-      role: 'MEMBER',
-    }
+    console.log('Hi:', props.userData['0'].role.name)
+    this.state = {}
   }
+
   handleMenuClick = (record, e) => {
     const { onDeleteItem, onEditItem } = this.props
 
-    // if (e.key === '1') {
-    //   onEditItem(record)
-    // } else if (e.key === '2') {
-    //   confirm({
-    //     title: t`Are you sure delete this record?`,
-    //     onOk() {
-    //       onDeleteItem(record.id)
-    //     },
-    //   })
-    // }
-
     switch (e.key) {
       case '1':
-        if (this.state.role === 'MEMBER') {
+        if (record.role.name === 'MEMBER') {
           // set co-owner
-          this.setState({
-            role: 'CO-OWNER',
-          })
-        }
-        if (this.state.role === 'CO-OWNER') {
-          // remove co-owner  + kickout
-          this.setState({
-            role: 'MEMBER',
-          })
+          this.props.handleChangeRole(record.user.id, 3)
+        } else if (record.role.name === 'CO-OWNER') {
+          // remove co-owner
+          this.props.handleChangeRole(record.user.id, 1)
         }
         break
       case '2':
@@ -74,55 +58,59 @@ class UserList extends PureComponent {
         title: <Trans>FullName</Trans>,
         dataIndex: 'name',
         key: 'name',
-        render: (text, record) => <Link to={`/user/${record.id}`}>{text}</Link>,
+        render: (text, record, idx) => (
+          <Link to={`/user/${record.user.id}`}>
+            {this.props.userData[idx].user.fullname}
+          </Link>
+        ),
       },
       {
         title: <Trans>Role</Trans>,
         dataIndex: 'role',
         width: '10%',
         key: 'role',
-        render: () => <p>{this.state.role}</p>,
+        render: (text, record, idx) => (
+          <p>{this.props.userData[idx].role.name}</p>
+        ),
       },
       {
         title: <Trans>Birthday</Trans>,
         dataIndex: 'birthday',
         key: 'birthday',
-      },
-
-      {
-        title: <Trans>Gender</Trans>,
-        dataIndex: 'isMale',
-        key: 'isMale',
-        width: '7%',
-        render: (text) => <span>{text ? 'Male' : 'Female'}</span>,
+        render: (text, record, idx) => (
+          <p>{this.props.userData[idx].user.birthday}</p>
+        ),
       },
       {
         title: <Trans>Email</Trans>,
         dataIndex: 'email',
         key: 'email',
+        render: (text, record, idx) => (
+          <p>{this.props.userData[idx].user.email}</p>
+        ),
       },
       {
         title: <Trans>Operation</Trans>,
         key: 'operation',
         fixed: 'right',
         width: '8%',
-        render: (text, record) => {
+        render: (text, record, idx) => {
           return (
             <DropOption
               onMenuClick={(e) => this.handleMenuClick(record, e)}
               menuOptions={
                 // change this.state.role to record.role
-                this.state.role === 'MEMBER'
+                record.role.name === 'MEMBER'
                   ? [
-                      { key: '1', name: t`Set Co-Owner` },
-                      { key: '2', name: t`Kick out` },
+                      { key: '1', name: t`Set Co-Owner`, idx: idx },
+                      { key: '2', name: t`Kick out`, idx: idx },
                     ]
-                  : this.state.role === 'CO-OWNER'
+                  : record.role.name === 'CO-OWNER'
                   ? [
-                      { key: '1', name: t`Remove Co-Owner` },
-                      { key: '2', name: t`Kick out` },
+                      { key: '1', name: t`Remove Co-Owner`, idx: idx },
+                      { key: '2', name: t`Kick out`, idx: idx },
                     ]
-                  : [{ key: '1', name: t`Cake double U` }]
+                  : [{ key: '1', name: t`Cake double U`, idx: idx }]
               }
             />
           )

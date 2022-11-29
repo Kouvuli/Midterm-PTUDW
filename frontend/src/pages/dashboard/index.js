@@ -189,7 +189,7 @@ class Dashboard extends PureComponent {
               hasFeedback
               {...formItemLayout}
             >
-              <Input disabled={!this.state.updating} />
+              <Input disabled={true} />
             </FormItem>
             <Row justify="center">
               {this.state.updating === true ? (

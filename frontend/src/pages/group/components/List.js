@@ -6,6 +6,7 @@ import { t } from '@lingui/macro'
 import { Trans } from '@lingui/macro'
 import { Link } from 'umi'
 import styles from './List.less'
+import dayjs from 'dayjs'
 
 const { confirm } = Modal
 
@@ -55,6 +56,9 @@ class List extends PureComponent {
         title: <Trans>Create day</Trans>,
         dataIndex: 'create_at',
         key: 'create_at',
+        render: (text, record) => (
+          <p>{dayjs(record.create_at).format('YYYY-MM-DD')}</p>
+        ),
       },
       {
         title: <Trans>Operation</Trans>,

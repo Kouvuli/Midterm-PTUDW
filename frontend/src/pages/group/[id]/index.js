@@ -11,21 +11,70 @@ import UserFilter from '../components/UserFilter'
 import UserModal from '../components/UserModal'
 import styles from './index.less'
 import groupService from '../../../services/group'
-
+import dayjs from 'dayjs'
 @connect(({ groupDetail, loading }) => ({ groupDetail, loading }))
 class GroupDetail extends PureComponent {
+  urlSplit = window.location.href.split('/')
   constructor(props) {
     super(props)
     this.state = {
       users: [],
+      groupDetailLoading: true,
+      userLoading: true,
+      groupId: this.urlSplit[this.urlSplit.length - 1],
+      group: {},
     }
   }
+
+  handleChangeRole = (id, newRoleId) => {
+    this.setState({
+      users: this.state.users.map((user) => {
+        if (user.user.id === id) {
+          const newUser = { ...user }
+          console.log('newRole ', newRoleId)
+          switch (newRoleId) {
+            case 1:
+              newUser.role.name = 'MEMBER'
+              break
+            case 2:
+              newUser.role.name = 'KICKOUT'
+              break
+            case 3:
+              newUser.role.name = 'CO-OWNER'
+              break
+            case 4:
+              newUser.role.name = 'OWNER'
+              break
+            default:
+              break
+          }
+          newUser.role.id = newRoleId
+          groupService
+            .updateMemberRoleInGroup(id, newRoleId, this.state.groupId)
+            .then((res) => console.log(res.data))
+            .catch((error) => console.log(error))
+          return newUser
+        } else return user
+      }),
+    })
+  }
+
   componentDidMount() {
     const urlSplit = window.location.href.split('/')
     const groupId = urlSplit[urlSplit.length - 1]
-    groupService.getUserByGroupId(groupId).then((res) => {
-      console.log(res.data)
-    })
+    groupService
+      .getGroupByGroupId(groupId)
+      .then((res) => {
+        console.log(res.data)
+        this.setState({ group: res.data, groupDetailLoading: false })
+      })
+      .catch((error) => console.log(error))
+    groupService
+      .getUserByGroupId(groupId)
+      .then((res) => {
+        this.setState({ users: res.data, userLoading: false })
+      })
+      .catch((error) => console.log(error))
   }
   handleRefresh = (newQuery) => {
     const { location } = this.props
@@ -95,7 +144,7 @@ class GroupDetail extends PureComponent {
     const { list, pagination, selectedRowKeys } = groupDetail
     console.log(groupDetail)
     return {
-      dataSource: list,
+      dataSource: this.state.users,
       loading: loading.effects['groupDetail/queryUserList'],
       pagination,
       onChange: (page) => {
@@ -168,23 +217,64 @@ class GroupDetail extends PureComponent {
     const { groupDetail } = this.props
     const { data, selectedRowKeys } = groupDetail
     const content = []
-
-    for (let key in data) {
-      if ({}.hasOwnProperty.call(data, key)) {
-        if (key === 'image') {
-          content.push(
-            <div key={key} className={styles.item}>
-              <div className={styles.title}>{key}</div>
-              <img src={data[key]} alt="" />
-            </div>
-          )
-        } else {
-          content.push(
-            <div key={key} className={styles.item}>
-              <div className={styles.title}>{key}</div>
-              <div>{String(data[key])}</div>
-            </div>
-          )
+    content.push(<h2>Group detail</h2>)
+    for (let key in this.state.group) {
+      if ({}.hasOwnProperty.call(this.state.group, key)) {
+        switch (key) {
+          case 'image':
+            content.push(
+              <>
+                {this.state.groupDetailLoading ? null : (
+                  <div key={key}>
+                    <div>{key}</div>
+                    <img src={this.state.group[key]} alt="" />
+                  </div>
+                )}
+              </>
+            )
+            break
+          case 'admin':
+            content.push(
+              <>
+                {this.state.groupDetailLoading ? null : (
+                  <div key={key}>
+                    <div>Owner : {String(this.state.group[key].email)}</div>
+                  </div>
+                )}
+              </>
+            )
+            break
+          case 'create_at':
+            content.push(
+              <>
+                {this.state.groupDetailLoading ? null : (
+                  <div key={key}>
+                    <div>
+                      Create date :{' '}
+                      {dayjs(String(this.state.group[key])).format(
+                        'YYYY-MM-DD'
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
+            )
+            break
+          case 'lock':
+            break
+          default:
+            content.push(
+              <>
+                {this.state.groupDetailLoading ? null : (
+                  <div key={key}>
+                    <div>
+                      {key} : {String(this.state.group[key])}
+                    </div>
+                  </div>
+                )}
+              </>
+            )
+            break
         }
       }
     }
@@ -208,7 +298,16 @@ class GroupDetail extends PureComponent {
             </Col>
           </Row>
         )}
-        <UserList {...this.userListProps} />
+        {this.state.userLoading === true ? (
+          <div>Loading users data...</div>
+        ) : (
+          <UserList
+            {...this.userListProps}
+            userData={this.state.users}
+            handleChangeRole={this.handleChangeRole}
+          />
+        )}
+
         <UserModal {...this.userModalProps} />
       </div>
     )

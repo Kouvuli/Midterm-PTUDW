@@ -1,6 +1,6 @@
 import axios from 'axios'
 const token = '' //window.localStorage.getItem('userToken')
-const baseUrl = 'https://vtt-server.herokuapp.com'
+const baseUrl = 'https://midterm-ptudw-production.up.railway.app'
 const updateUser = async (id, updatedUser) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -13,4 +13,8 @@ const updateUser = async (id, updatedUser) => {
   return res.data
 }
 
-export default { updateUser }
+const getUserById = async (id) => {
+  const response = await axios.get(`${baseUrl}/api/v1/users/${id}`)
+  return response.data
+}
+export default { updateUser, getUserById }
