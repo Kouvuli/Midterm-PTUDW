@@ -69,7 +69,9 @@ class Group extends PureComponent {
   get modalProps() {
     const { dispatch, group, loading } = this.props
     const { currentItem, modalOpen, modalType } = group
-
+    const handleUpdateGroups = (newGroup) => {
+      this.setState({ groups: [...this.state.groups, newGroup] })
+    }
     return {
       item: modalType === 'create' ? {} : currentItem,
       open: modalOpen,
@@ -91,6 +93,12 @@ class Group extends PureComponent {
           type: 'group/hideModal',
         })
       },
+      onSuccessUpdate(newGroup) {
+        handleUpdateGroups(newGroup)
+        dispatch({
+          type: 'group/hideModal',
+        })
+      },
     }
   }
 
@@ -99,6 +107,7 @@ class Group extends PureComponent {
     const { list, pagination, selectedRowKeys } = group
 
     return {
+      // loading :
       dataSource: this.state.groups,
       loading: loading.effects['group/query'],
       pagination,

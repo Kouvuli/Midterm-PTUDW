@@ -12,6 +12,7 @@ import UserModal from '../components/UserModal'
 import styles from './index.less'
 import groupService from '../../../services/group'
 import dayjs from 'dayjs'
+
 @connect(({ groupDetail, loading }) => ({ groupDetail, loading }))
 class GroupDetail extends PureComponent {
   urlSplit = window.location.href.split('/')
@@ -24,6 +25,14 @@ class GroupDetail extends PureComponent {
       groupId: this.urlSplit[this.urlSplit.length - 1],
       group: {},
     }
+  }
+
+  handleGenerateInvitationLink = () => {
+    groupService.getInvitationLink(this.state.groupId).then((res) => {
+      console.log(res.data)
+      navigator.clipboard.writeText(res.data)
+      alert(`Invitation link had been copied to clipboard!`)
+    })
   }
 
   handleChangeRole = (id, newRoleId) => {
@@ -72,9 +81,12 @@ class GroupDetail extends PureComponent {
     groupService
       .getUserByGroupId(groupId)
       .then((res) => {
+        console.log('Hi there', res.data)
         this.setState({ users: res.data, userLoading: false })
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error)
+      })
   }
   handleRefresh = (newQuery) => {
     const { location } = this.props
@@ -278,6 +290,19 @@ class GroupDetail extends PureComponent {
         }
       }
     }
+    content.push(
+      <>
+        {this.state.groupDetailLoading ? null : (
+          <Button
+            size="small"
+            danger
+            onClick={() => this.handleGenerateInvitationLink()}
+          >
+            Get invitation link
+          </Button>
+        )}
+      </>
+    )
     content.push(
       <div>
         <div className={styles.title}>Users in group</div>

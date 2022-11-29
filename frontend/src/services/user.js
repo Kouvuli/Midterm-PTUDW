@@ -17,4 +17,12 @@ const getUserById = async (id) => {
   const response = await axios.get(`${baseUrl}/api/v1/users/${id}`)
   return response.data
 }
-export default { updateUser, getUserById }
+
+const addUserToGroup = async (userId, groupId) => {
+  const response = await axios.post(
+    `${baseUrl}/api/v1/groups/${groupId}/members`,
+    { user_id: userId, role_id: 1 }
+  )
+  return response.data
+}
+export default { updateUser, getUserById, addUserToGroup }

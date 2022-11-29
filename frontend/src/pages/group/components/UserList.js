@@ -12,7 +12,7 @@ const { confirm } = Modal
 class UserList extends PureComponent {
   constructor(props) {
     super(props)
-    console.log('Hi:', props.userData['0'].role.name)
+    console.log('Hi:', props.userData)
     this.state = {}
   }
 
@@ -45,6 +45,51 @@ class UserList extends PureComponent {
 
   render() {
     const { onDeleteItem, onEditItem, ...tableProps } = this.props
+    const emptyColumns = [
+      {
+        title: <Trans>Avatar</Trans>,
+        dataIndex: 'avatar',
+        key: 'avatar',
+        width: '7%',
+        fixed: 'left',
+      },
+      {
+        title: <Trans>FullName</Trans>,
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: <Trans>Role</Trans>,
+        dataIndex: 'role',
+        width: '10%',
+        key: 'role',
+      },
+      {
+        title: <Trans>Birthday</Trans>,
+        dataIndex: 'birthday',
+        key: 'birthday',
+      },
+      {
+        title: <Trans>Email</Trans>,
+        dataIndex: 'email',
+        key: 'email',
+      },
+      {
+        title: <Trans>Operation</Trans>,
+        key: 'operation',
+        fixed: 'right',
+        width: '8%',
+        render: (text, record, idx) => {
+          return (
+            <DropOption
+              onMenuClick={(e) => this.handleMenuClick(record, e)}
+              menuOptions={[]}
+            />
+          )
+        },
+      },
+    ]
+
     const columns = [
       {
         title: <Trans>Avatar</Trans>,
@@ -100,6 +145,7 @@ class UserList extends PureComponent {
               onMenuClick={(e) => this.handleMenuClick(record, e)}
               menuOptions={
                 // change this.state.role to record.role
+                // lock group user members
                 record.role.name === 'MEMBER'
                   ? [
                       { key: '1', name: t`Set Co-Owner`, idx: idx },
@@ -128,7 +174,7 @@ class UserList extends PureComponent {
         className={styles.table}
         bordered
         scroll={{ x: 1200 }}
-        columns={columns}
+        columns={this.props.userData.length === [] ? emptyColumns : columns}
         simple
         rowKey={(record) => record.id}
       />

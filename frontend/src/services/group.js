@@ -22,9 +22,27 @@ const updateMemberRoleInGroup = async (id, roleId, groupId) => {
   )
   return response.data
 }
+const createGroup = async (ownerId, groupData) => {
+  const body = {
+    name: groupData.name,
+    admin: {
+      id: ownerId,
+    },
+  }
+  const response = await axios.post(`${baseUrl}/api/v1/groups`, body)
+  return response.data
+}
+const getInvitationLink = async (groupId) => {
+  const response = await axios.get(
+    `${baseUrl}/api/v1/groups/${groupId}/invitationLink`
+  )
+  return response.data
+}
 export default {
   getOwnedGroupByUserId,
   getUserByGroupId,
   updateMemberRoleInGroup,
   getGroupByGroupId,
+  createGroup,
+  getInvitationLink,
 }
