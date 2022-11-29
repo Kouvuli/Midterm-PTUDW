@@ -7,6 +7,7 @@ import { GithubOutlined } from '@ant-design/icons'
 import { t, Trans } from '@lingui/macro'
 import { setLocale } from 'utils'
 import config from 'utils/config'
+import dayjs from 'dayjs'
 
 import styles from './index.less'
 
@@ -18,7 +19,7 @@ class Register extends PureComponent {
     const { dispatch, loading } = this.props
 
     const handleOk = (values) => {
-      console.log(values)
+      values.birthday = dayjs(values.birthday).format('YYYY-MM-DD')
       dispatch({ type: 'register/register', payload: values })
     }
     let footerLinks = [

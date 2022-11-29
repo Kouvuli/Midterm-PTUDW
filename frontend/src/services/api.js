@@ -3,8 +3,8 @@ export default {
 
   queryUserInfo: '/user',
   logoutUser: '/user/logout',
-  loginUser: 'POST /user/login',
-  registerUser: 'POST /user/register',
+  loginUser: 'POST /auth/signin',
+  registerUser: 'POST /auth/signup',
 
   queryUser: '/user/:id',
   queryUserList: '/users',

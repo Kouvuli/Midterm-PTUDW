@@ -8,11 +8,14 @@ const { CancelToken } = axios
 window.cancelRequest = new Map()
 
 export default function request(options) {
-  let { data, url } = options
+  let { data, url, withBaseUrl } = options
   const cloneData = cloneDeep(data)
 
   try {
     let domain = ''
+    if (withBaseUrl) {
+      domain = 'https://midterm-ptudw-production.up.railway.app'
+    }
     const urlMatch = url.match(/[a-zA-z]+:\/\/[^/]*/)
     if (urlMatch) {
       ;[domain] = urlMatch

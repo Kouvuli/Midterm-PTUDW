@@ -18,19 +18,17 @@ export default {
   // },
   effects: {
     *register({ payload }, { put, call, select }) {
-      const data = yield call(registerUser, payload)
-      const { locationQuery } = yield select(_ => _.app)
-      if (data.success) {
-        const { from } = locationQuery
-        yield put({ type: 'app/query' })
-        if (!pathToRegexp('/register').exec(from)) {
-          if (['', '/'].includes(from)) history.push('/dashboard')
-          else history.push(from)
+      try {
+        const data = yield call(registerUser, payload)
+        const { locationQuery } = yield select(_ => _.app)
+        if (data.success) {
+          const { from } = locationQuery
+          history.push('/login?success=true')
         } else {
-          history.push('/dashboard')
+          throw data
         }
-      } else {
-        throw data
+      } catch (err) {
+        window.alert(err.message || "Unknown Error")
       }
     },
   },
