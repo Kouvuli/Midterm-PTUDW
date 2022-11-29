@@ -4,11 +4,11 @@ import api from 'api'
 import { pageModel } from 'utils/model'
 
 const {
-  queryJoinedGroupList,
-  createJoinedGroup,
-  removeJoinedGroup,
-  updateJoinedGroup,
-  removeJoinedGroupList,
+  queryGroupList,
+  createGroup,
+  removeGroup,
+  updateGroup,
+  removeGroupList,
 } = api
 
 export default modelExtend(pageModel, {
@@ -24,7 +24,7 @@ export default modelExtend(pageModel, {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (pathToRegexp('/joinedgroup').exec(location.pathname)) {
+        if (pathToRegexp('/group').exec(location.pathname)) {
           const payload = location.query || { page: 1, pageSize: 10 }
           dispatch({
             type: 'query',
@@ -37,7 +37,7 @@ export default modelExtend(pageModel, {
 
   effects: {
     *query({ payload = {} }, { call, put }) {
-      const data = yield call(queryJoinedGroupList, payload)
+      const data = yield call(queryGroupList, payload)
       if (data) {
         yield put({
           type: 'querySuccess',
@@ -54,8 +54,8 @@ export default modelExtend(pageModel, {
     },
 
     *delete({ payload }, { call, put, select }) {
-      const data = yield call(removeJoinedGroup, { id: payload })
-      const { selectedRowKeys } = yield select(_ => _.joinedGroup)
+      const data = yield call(removeGroup, { id: payload })
+      const { selectedRowKeys } = yield select(_ => _.group)
       if (data.success) {
         yield put({
           type: 'updateState',
@@ -69,7 +69,7 @@ export default modelExtend(pageModel, {
     },
 
     *multiDelete({ payload }, { call, put }) {
-      const data = yield call(removeJoinedGroupList, payload)
+      const data = yield call(removeGroupList, payload)
       if (data.success) {
         yield put({ type: 'updateState', payload: { selectedRowKeys: [] } })
       } else {
@@ -78,7 +78,7 @@ export default modelExtend(pageModel, {
     },
 
     *create({ payload }, { call, put }) {
-      const data = yield call(createJoinedGroup, payload)
+      const data = yield call(createGroup, payload)
       if (data.success) {
         yield put({ type: 'hideModal' })
       } else {
@@ -87,9 +87,9 @@ export default modelExtend(pageModel, {
     },
 
     *update({ payload }, { select, call, put }) {
-      const id = yield select(({ joinedGroup }) => joinedGroup.currentItem.id)
-      const newJoinedGroup = { ...payload, id }
-      const data = yield call(updateJoinedGroup, newJoinedGroup)
+      const id = yield select(({ group }) => group.currentItem.id)
+      const newGroup = { ...payload, id }
+      const data = yield call(updateGroup, newGroup)
       if (data.success) {
         yield put({ type: 'hideModal' })
       } else {

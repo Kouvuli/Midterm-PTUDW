@@ -7,6 +7,11 @@ const getOwnedGroupByUserId = async (id) => {
   return response.data
 }
 
+const getJoinedGroupByUserId = async (id) => {
+  const response = await axios.get(`${baseUrl}/api/v1/users/${id}/groups`)
+  return response.data
+}
+
 const getUserByGroupId = async (id) => {
   const response = await axios.get(`${baseUrl}/api/v1/groups/${id}/members`)
   return response.data
@@ -41,6 +46,7 @@ const getInvitationLink = async (groupId) => {
 }
 export default {
   getOwnedGroupByUserId,
+  getJoinedGroupByUserId,
   getUserByGroupId,
   updateMemberRoleInGroup,
   getGroupByGroupId,

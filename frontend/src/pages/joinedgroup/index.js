@@ -9,9 +9,30 @@ import { stringify } from 'qs'
 import List from './components/List'
 import Filter from './components/Filter'
 import Modal from './components/Modal'
+import groupService from '../../services/group'
+import store from 'store'
 
-@connect(({ joinedGroup, loading }) => ({ joinedGroup, loading }))
+@connect(({ group, loading }) => ({ group, loading }))
 class JoinedGroup extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      groups: [],
+    }
+  }
+
+  componentDidMount() {
+    const auth = store.get('auth')
+    const { id } = auth
+    groupService
+      .getJoinedGroupByUserId(id)
+      .then((res) => {
+        console.log(res.data)
+        this.setState({ groups: res.data })
+      })
+      .catch((e) => console.log(e))
+  }
+
   handleRefresh = (newQuery) => {
     const { location } = this.props
     const { query, pathname } = location
@@ -29,8 +50,8 @@ class JoinedGroup extends PureComponent {
   }
 
   handleDeleteItems = () => {
-    const { dispatch, joinedGroup } = this.props
-    const { list, pagination, selectedRowKeys } = joinedGroup
+    const { dispatch, group } = this.props
+    const { list, pagination, selectedRowKeys } = group
 
     dispatch({
       type: 'joinedGroup/multiDelete',
@@ -48,16 +69,18 @@ class JoinedGroup extends PureComponent {
   }
 
   get modalProps() {
-    const { dispatch, joinedGroup, loading } = this.props
-    const { currentItem, modalOpen, modalType } = joinedGroup
-
+    const { dispatch, group, loading } = this.props
+    const { currentItem, modalOpen, modalType } = group
+    const handleUpdateGroups = (newGroup) => {
+      this.setState({ groups: [...this.state.groups, newGroup] })
+    }
     return {
       item: modalType === 'create' ? {} : currentItem,
       open: modalOpen,
       destroyOnClose: true,
       maskClosable: false,
       confirmLoading: loading.effects[`joinedGroup/${modalType}`],
-      title: `${modalType === 'create' ? t`Create JoinedGroup` : t`Update JoinedGroup`}`,
+      title: `${modalType === 'create' ? t`Create Group` : t`Update Group`}`,
       centered: true,
       onOk: (data) => {
         dispatch({
@@ -72,15 +95,22 @@ class JoinedGroup extends PureComponent {
           type: 'joinedGroup/hideModal',
         })
       },
+      onSuccessUpdate(newGroup) {
+        handleUpdateGroups(newGroup)
+        dispatch({
+          type: 'joinedGroup/hideModal',
+        })
+      },
     }
   }
 
   get listProps() {
-    const { dispatch, joinedGroup, loading } = this.props
-    const { list, pagination, selectedRowKeys } = joinedGroup
+    const { dispatch, group, loading } = this.props
+    const { list, pagination, selectedRowKeys } = group
 
     return {
-      dataSource: list,
+      // loading :
+      dataSource: this.state.groups,
       loading: loading.effects['joinedGroup/query'],
       pagination,
       onChange: (page) => {
@@ -150,9 +180,8 @@ class JoinedGroup extends PureComponent {
   }
 
   render() {
-    const { joinedGroup } = this.props
-    const { selectedRowKeys } = joinedGroup
-    console.log(this.props)
+    const { group } = this.props
+    const { selectedRowKeys } = group
 
     return (
       <Page inner>
@@ -181,7 +210,7 @@ class JoinedGroup extends PureComponent {
 }
 
 JoinedGroup.propTypes = {
-  joinedGroup: PropTypes.object,
+  group: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.object,

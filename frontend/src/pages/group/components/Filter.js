@@ -75,6 +75,17 @@ class Filter extends Component {
             1000
           )
         })
+    }).catch((error) => {
+      this.setState({
+        alert: {
+          message: `Failed to accept invitation`,
+          type: 'error',
+        },
+      })
+      this.timer = setTimeout(
+        () => this.setState({ alert: { message: '', type: '' } }),
+        1000
+      )
     })
   }
   handleFields = (fields) => {
