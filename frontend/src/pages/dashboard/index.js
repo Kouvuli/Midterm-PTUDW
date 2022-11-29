@@ -114,7 +114,8 @@ class Dashboard extends PureComponent {
     }
   }
   componentDidMount() {
-    const id = window.localStorage.getItem('userId')
+    const auth = store.get('auth')
+    const { id } = auth
     dashBoardService
       .getUserById(id)
       .then((res) => {

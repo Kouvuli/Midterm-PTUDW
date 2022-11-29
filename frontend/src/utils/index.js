@@ -174,3 +174,11 @@ export function setLocale(language) {
     window.location.reload()
   }
 }
+
+export function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
+export function isExpired(expire) {
+  return new Date().getTime() > new Date(expire).getTime();
+}

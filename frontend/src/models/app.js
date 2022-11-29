@@ -5,12 +5,12 @@ import { stringify } from 'qs'
 import store from 'store'
 const { pathToRegexp } = require("path-to-regexp")
 import { ROLE_TYPE } from 'utils/constant'
-import { queryLayout } from 'utils'
+import { queryLayout, isEmpty, isExpired } from 'utils'
 import { CANCEL_REQUEST_MESSAGE } from 'utils/constant'
 import api from 'api'
 import config from 'config'
 
-const { queryRouteList, logoutUser, queryUserInfo } = api
+const { queryRouteList, logoutUser } = api
 
 const goDashboard = () => {
   if (pathToRegexp(['/', '/login']).exec(window.location.pathname)) {
@@ -85,10 +85,14 @@ export default {
         return
       }
       const { locationPathname } = yield select(_ => _.app)
-      const { success, user } = yield call(queryUserInfo, payload)
-      if (success && user) {
+      const auth = store.get('auth')
+      if (auth && !isEmpty(auth)) {
+        const { expired_date } = auth
+        if (isExpired(expired_date)) {
+          yield put({ type: 'signOut' })
+        }
         const { list } = yield call(queryRouteList)
-        const { permissions } = user
+        const permissions = { role: ROLE_TYPE.ADMIN} 
         let routeList = list
         if (
           permissions.role === ROLE_TYPE.ADMIN ||
@@ -109,7 +113,6 @@ export default {
         }
         store.set('routeList', routeList)
         store.set('permissions', permissions)
-        store.set('user', user)
         store.set('isInit', true)
         goDashboard()
       } else if (queryLayout(config.layouts, locationPathname) !== 'public') {
@@ -129,6 +132,7 @@ export default {
         store.set('permissions', { visit: [] })
         store.set('user', {})
         store.set('isInit', false)
+        store.set('auth', null)
         yield put({ type: 'query' })
       } else {
         throw data

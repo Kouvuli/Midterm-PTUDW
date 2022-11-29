@@ -16,11 +16,18 @@ const FormItem = Form.Item
 class Login extends PureComponent {
 
   render() {
-    const { dispatch, loading } = this.props
+    const { dispatch, loading, location } = this.props
+
+    const { query } = location
+    const { success } = query
     
     const handleOk = values => {
       dispatch({ type: 'login/login', payload: values })
     }
+    const handleFailed = errorInfo => {
+      console.log(errorInfo)
+    }
+
     let footerLinks = [
       {
         key: 'github',
@@ -50,6 +57,7 @@ class Login extends PureComponent {
           </div>
           <Form
             onFinish={handleOk}
+            onFinishFailed={handleFailed}
             >
             <FormItem name="username" 
               rules={[{ required: true }]} hasFeedback>
@@ -75,6 +83,7 @@ class Login extends PureComponent {
                   Don't have an account? <Link to="/register">Register now</Link>
                 </span>
               </p>
+              {success && <p className={styles.successMessage}>Signup Successfully</p>}
             </Row>
           </Form>
         </div>

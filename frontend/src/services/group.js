@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'https://vtt-server.herokuapp.com'
+const baseUrl = 'https://midterm-ptudw-production.up.railway.app'
 
 const getOwnedGroupByUserId = async (id) => {
   const response = await axios.get(`${baseUrl}/api/v1/users/${id}/ownGroups`)
