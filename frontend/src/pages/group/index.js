@@ -9,9 +9,28 @@ import { stringify } from 'qs'
 import List from './components/List'
 import Filter from './components/Filter'
 import Modal from './components/Modal'
+import groupService from '../../services/group'
 
 @connect(({ group, loading }) => ({ group, loading }))
 class Group extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      groups: [],
+    }
+  }
+
+  componentDidMount() {
+    const id = window.localStorage.getItem('userId')
+    groupService
+      .getOwnedGroupByUserId(id)
+      .then((res) => {
+        console.log(res.data)
+        this.setState({ groups: res.data })
+      })
+      .catch((e) => console.log(e))
+  }
+
   handleRefresh = (newQuery) => {
     const { location } = this.props
     const { query, pathname } = location
@@ -80,7 +99,7 @@ class Group extends PureComponent {
     const { list, pagination, selectedRowKeys } = group
 
     return {
-      dataSource: list,
+      dataSource: this.state.groups,
       loading: loading.effects['group/query'],
       pagination,
       onChange: (page) => {
@@ -152,7 +171,6 @@ class Group extends PureComponent {
   render() {
     const { group } = this.props
     const { selectedRowKeys } = group
-    console.log(this.props)
 
     return (
       <Page inner>

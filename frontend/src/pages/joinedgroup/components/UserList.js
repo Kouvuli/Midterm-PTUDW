@@ -38,22 +38,24 @@ class UserList extends PureComponent {
         render: (text) => <Avatar style={{ marginLeft: 8 }} src={text} />,
       },
       {
-        title: <Trans>Name</Trans>,
+        title: <Trans>FullName</Trans>,
         dataIndex: 'name',
         key: 'name',
         render: (text, record) => <Link to={`/user/${record.id}`}>{text}</Link>,
       },
       {
-        title: <Trans>NickName</Trans>,
-        dataIndex: 'nickName',
-        key: 'nickName',
+        title: <Trans>Role</Trans>,
+        dataIndex: 'role',
+        width: '10%',
+        key: 'role',
+        render: () => <p>{this.state.role}</p>,
       },
       {
-        title: <Trans>Age</Trans>,
-        dataIndex: 'age',
-        width: '6%',
-        key: 'age',
+        title: <Trans>Birthday</Trans>,
+        dataIndex: 'birthday',
+        key: 'birthday',
       },
+
       {
         title: <Trans>Gender</Trans>,
         dataIndex: 'isMale',
@@ -62,24 +64,9 @@ class UserList extends PureComponent {
         render: (text) => <span>{text ? 'Male' : 'Female'}</span>,
       },
       {
-        title: <Trans>Phone</Trans>,
-        dataIndex: 'phone',
-        key: 'phone',
-      },
-      {
         title: <Trans>Email</Trans>,
         dataIndex: 'email',
         key: 'email',
-      },
-      {
-        title: <Trans>Address</Trans>,
-        dataIndex: 'address',
-        key: 'address',
-      },
-      {
-        title: <Trans>CreateTime</Trans>,
-        dataIndex: 'createTime',
-        key: 'createTime',
       },
       {
         title: <Trans>Operation</Trans>,

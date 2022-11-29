@@ -52,9 +52,9 @@ class List extends PureComponent {
         key: 'total',
       },
       {
-        title: <Trans>CreateTime</Trans>,
-        dataIndex: 'createTime',
-        key: 'createTime',
+        title: <Trans>Create day</Trans>,
+        dataIndex: 'create_at',
+        key: 'create_at',
       },
       {
         title: <Trans>Operation</Trans>,

@@ -10,9 +10,23 @@ import UserList from '../components/UserList'
 import UserFilter from '../components/UserFilter'
 import UserModal from '../components/UserModal'
 import styles from './index.less'
+import groupService from '../../../services/group'
 
 @connect(({ groupDetail, loading }) => ({ groupDetail, loading }))
 class GroupDetail extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      users: [],
+    }
+  }
+  componentDidMount() {
+    const urlSplit = window.location.href.split('/')
+    const groupId = urlSplit[urlSplit.length - 1]
+    groupService.getUserByGroupId(groupId).then((res) => {
+      console.log(res.data)
+    })
+  }
   handleRefresh = (newQuery) => {
     const { location } = this.props
     const { query, pathname } = location
@@ -79,7 +93,7 @@ class GroupDetail extends PureComponent {
     const { dispatch, groupDetail, loading } = this.props
 
     const { list, pagination, selectedRowKeys } = groupDetail
-
+    console.log(groupDetail)
     return {
       dataSource: list,
       loading: loading.effects['groupDetail/queryUserList'],
