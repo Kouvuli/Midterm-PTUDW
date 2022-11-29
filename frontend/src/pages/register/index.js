@@ -1,10 +1,10 @@
 import React, { PureComponent, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect, Link } from 'umi'
-import { Button, Row, Input, Form } from 'antd'
+import { Button, Row, Input, Form, DatePicker } from 'antd'
 import { GlobalFooter } from 'components'
 import { GithubOutlined } from '@ant-design/icons'
-import { t, Trans } from "@lingui/macro"
+import { t, Trans } from '@lingui/macro'
 import { setLocale } from 'utils'
 import config from 'utils/config'
 
@@ -13,13 +13,13 @@ import styles from './index.less'
 const FormItem = Form.Item
 
 @connect(({ loading, dispatch }) => ({ loading, dispatch }))
-class Login extends PureComponent {
-
+class Register extends PureComponent {
   render() {
     const { dispatch, loading } = this.props
-    
-    const handleOk = values => {
-      dispatch({ type: 'login/login', payload: values })
+
+    const handleOk = (values) => {
+      console.log(values)
+      dispatch({ type: 'register/register', payload: values })
     }
     let footerLinks = [
       {
@@ -32,7 +32,7 @@ class Login extends PureComponent {
 
     if (config.i18n) {
       footerLinks = footerLinks.concat(
-        config.i18n.languages.map(item => ({
+        config.i18n.languages.map((item) => ({
           key: item.key,
           title: (
             <span onClick={setLocale.bind(null, item.key)}>{item.title}</span>
@@ -48,31 +48,42 @@ class Login extends PureComponent {
             <img alt="logo" src={config.logoPath} />
             <span>{config.siteName}</span>
           </div>
-          <Form
-            onFinish={handleOk}
-            >
-            <FormItem name="username" 
-              rules={[{ required: true }]} hasFeedback>
-                <Input
-                  placeholder={t`Username`}
-                />
+          <Form onFinish={handleOk}>
+            <FormItem name="username" rules={[{ required: true }]} hasFeedback>
+              <Input placeholder={t`Username`} />
             </FormItem>
-            <Trans id="Password" render={({translation}) => (
-              <FormItem name="password" rules={[{ required: true }]} hasFeedback>
-              <Input type='password' placeholder={translation} required />
-              </FormItem>)} 
+            <FormItem t name="email" rules={[{ required: true, pattern: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/, message: t`The input is not valid E-mail!`, }]} hasFeedback>
+              <Input placeholder={t`Email`} />
+            </FormItem>
+            <FormItem name="fullname" rules={[{ required: true }]} hasFeedback>
+              <Input placeholder={t`Fullname`} />
+            </FormItem>
+            <FormItem name="birthday" rules={[{ required: true }]} hasFeedback>
+              <DatePicker className={styles.dob} format="DD/MM/YYYY" placeholder="Date of Birth" />
+            </FormItem>
+            <Trans
+              id="Password"
+              render={({ translation }) => (
+                <FormItem
+                  name="password"
+                  rules={[{ required: true }]}
+                  hasFeedback
+                >
+                  <Input type="password" placeholder={translation} required />
+                </FormItem>
+              )}
             />
             <Row>
               <Button
                 type="primary"
                 htmlType="submit"
-                loading={loading.effects.login}
+                loading={loading.effects.register}
               >
-                <Trans>Sign in</Trans>
+                <Trans>Register</Trans>
               </Button>
               <p>
                 <span className="margin-right">
-                  Don't have an account? <Link to="/register">Register now</Link>
+                  Already have an account? <Link to="/login">Login now</Link>
                 </span>
               </p>
             </Row>
@@ -86,10 +97,10 @@ class Login extends PureComponent {
   }
 }
 
-Login.propTypes = {
+Register.propTypes = {
   form: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.object,
 }
 
-export default Login
+export default Register
