@@ -17,7 +17,7 @@ class UserList extends PureComponent {
   }
 
   handleMenuClick = (record, e) => {
-    const { onDeleteItem, onEditItem } = this.props
+    const { onDeleteItem, onEditItem, onCancel } = this.props
 
     switch (e.key) {
       case '1':
@@ -30,12 +30,10 @@ class UserList extends PureComponent {
         }
         break
       case '2':
-        confirm({
-          title: t`Are you sure want to kick this user ?`,
-          onOk() {
-            onDeleteItem(record.id)
-          },
-        })
+        if (window.confirm('Are you sure want to kick this member')) {
+          this.props.handleChangeRole(record.user.id, 2)
+        } else {
+        }
         // api
         break
       default:

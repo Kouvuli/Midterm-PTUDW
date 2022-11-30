@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { history } from 'umi'
 import { connect } from 'umi'
-import { Row, Col, Button, Popconfirm } from 'antd'
+import { Row, Col, Button, Popconfirm, Input } from 'antd'
 import { t } from '@lingui/macro'
 import { Page } from 'components'
 import { stringify } from 'qs'
@@ -12,9 +12,11 @@ import UserModal from '../components/UserModal'
 import styles from './index.less'
 import groupService from '../../../services/group'
 import dayjs from 'dayjs'
-
+import invitationService from '../../../services/invitation'
+import { Link } from 'umi'
 @connect(({ groupDetail, loading }) => ({ groupDetail, loading }))
 class GroupDetail extends PureComponent {
+  timer
   urlSplit = window.location.href.split('/')
   constructor(props) {
     super(props)
@@ -24,6 +26,11 @@ class GroupDetail extends PureComponent {
       userLoading: true,
       groupId: this.urlSplit[this.urlSplit.length - 1],
       group: {},
+      invitationEmail: '',
+      alert: {
+        message: '',
+        type: '',
+      },
     }
   }
 
@@ -35,6 +42,59 @@ class GroupDetail extends PureComponent {
     })
   }
 
+  handleInviteViaEmail = () => {
+    groupService
+      .getInvitationLink(this.state.groupId)
+      .then((res) => {
+        const invitationUrl = res.data
+        invitationService
+          .inviteViaEmail(
+            this.state.invitationEmail,
+            `Copy this invitation link to your invitation box: ${invitationUrl}`,
+            `Invitation to group ${this.state.group.name} of ${this.state.group.admin.email}`
+          )
+          .then((res) => {
+            this.setState({
+              alert: {
+                message: 'Sent invitation link',
+                type: 'success',
+              },
+            })
+            this.timer = setTimeout(
+              () => this.setState({ alert: { message: '', type: '' } }),
+              1000
+            )
+          })
+          .catch((error) => {
+            this.setState({
+              alert: {
+                message: 'Invalid email',
+                type: 'error',
+              },
+            })
+            this.timer = setTimeout(
+              () => this.setState({ alert: { message: '', type: '' } }),
+              1000
+            )
+          })
+      })
+      .catch((error) => {
+        this.setState({
+          alert: {
+            message: 'Failed to get invitation link',
+            type: 'error',
+          },
+        })
+        this.timer = setTimeout(
+          () => this.setState({ alert: { message: '', type: '' } }),
+          1000
+        )
+      })
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timer)
+  }
   handleChangeRole = (id, newRoleId) => {
     this.setState({
       users: this.state.users.map((user) => {
@@ -155,7 +215,9 @@ class GroupDetail extends PureComponent {
 
     const { list, pagination, selectedRowKeys } = groupDetail
     console.log(groupDetail)
-    const filteredUsers = this.state.users.filter((user) => user.role.name !== 'KICKOUT')
+    const filteredUsers = this.state.users.filter(
+      (user) => user.role.name !== 'KICKOUT'
+    )
     return {
       dataSource: filteredUsers,
       loading: loading.effects['groupDetail/queryUserList'],
@@ -251,7 +313,12 @@ class GroupDetail extends PureComponent {
               <>
                 {this.state.groupDetailLoading ? null : (
                   <div key={key}>
-                    <div>Owner : {String(this.state.group[key].email)}</div>
+                    <div>
+                      Owner:{' '}
+                      <Link to={`/user/${this.state.group.admin.id}`}>
+                        {`${this.state.group[key].fullname} - ${this.state.group[key].email}`}
+                      </Link>
+                    </div>
                   </div>
                 )}
               </>
@@ -294,13 +361,44 @@ class GroupDetail extends PureComponent {
     content.push(
       <>
         {this.state.groupDetailLoading ? null : (
-          <Button
-            size="small"
-            danger
-            onClick={() => this.handleGenerateInvitationLink()}
-          >
-            Get invitation link
-          </Button>
+          <>
+            <Button
+              size="small"
+              danger
+              onClick={() => this.handleGenerateInvitationLink()}
+            >
+              Get invitation link
+            </Button>
+            <div>
+              <p
+                style={
+                  !this.state.alert.message
+                    ? { display: 'none' }
+                    : this.state.alert.type === 'error'
+                    ? { color: 'red' }
+                    : { color: 'green' }
+                }
+              >
+                {this.state.alert.message}
+              </p>
+            </div>
+            <div style={{ display: 'flex', margin: '0.5em 0 0 0' }}>
+              <Input
+                style={{ margin: '0 0.5em 0 0' }}
+                value={this.state.invitationEmail}
+                onChange={(e) =>
+                  this.setState({ invitationEmail: e.target.value })
+                }
+              ></Input>
+              <Button
+                type="primary"
+                danger
+                onClick={() => this.handleInviteViaEmail()}
+              >
+                Invite via email
+              </Button>
+            </div>
+          </>
         )}
       </>
     )
@@ -329,7 +427,9 @@ class GroupDetail extends PureComponent {
         ) : (
           <UserList
             {...this.userListProps}
-            userData={this.state.users}
+            userData={this.state.users.filter(
+              (user) => user.role.name !== 'KICKOUT'
+            )}
             handleChangeRole={this.handleChangeRole}
           />
         )}

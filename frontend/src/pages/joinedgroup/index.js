@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { history } from 'umi'
 import { connect } from 'umi'
-import { Row, Col, Button, Popconfirm } from 'antd'
+import { Row, Col, Button, Popconfirm, Input } from 'antd'
 import { t } from '@lingui/macro'
 import { Page } from 'components'
 import { stringify } from 'qs'
@@ -11,14 +11,75 @@ import Filter from './components/Filter'
 import Modal from './components/Modal'
 import groupService from '../../services/group'
 import store from 'store'
-
+import invitationService from '../../services/invitation'
+import userService from '../../services/user'
 @connect(({ group, loading }) => ({ group, loading }))
 class JoinedGroup extends PureComponent {
+  timer
   constructor(props) {
     super(props)
     this.state = {
       groups: [],
+      invitationLink: '',
+      alert: {
+        message: '',
+        type: '',
+      },
     }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timer)
+  }
+
+  handleInvitationLink = () => {
+    const link = this.state.invitationLink
+    invitationService
+      .getGroupInfoFromInvitation(link)
+      .then((res) => {
+        const group = res.data
+        const auth = store.get('auth')
+        const { id: userId } = auth
+        userService
+          .addUserToGroup(userId, group.id)
+          .then((res) => {
+            this.setState({
+              groups: [...this.state.groups, group],
+              alert: {
+                message: `Accepted invitation to group ${group.name}`,
+                type: 'success',
+              },
+            })
+            this.timer = setTimeout(
+              () => this.setState({ alert: { message: '', type: '' } }),
+              1000
+            )
+          })
+          .catch((error) => {
+            this.setState({
+              alert: {
+                message: `Failed to accept invitation`,
+                type: 'error',
+              },
+            })
+            this.timer = setTimeout(
+              () => this.setState({ alert: { message: '', type: '' } }),
+              1000
+            )
+          })
+      })
+      .catch((error) => {
+        this.setState({
+          alert: {
+            message: `Failed to accept invitation`,
+            type: 'error',
+          },
+        })
+        this.timer = setTimeout(
+          () => this.setState({ alert: { message: '', type: '' } }),
+          1000
+        )
+      })
   }
 
   componentDidMount() {
@@ -187,6 +248,33 @@ class JoinedGroup extends PureComponent {
 
     return (
       <Page inner>
+        <h3>Have an invitation link ?</h3>
+        <p
+          style={
+            !this.state.alert.message
+              ? { display: 'none' }
+              : this.state.alert.type === 'error'
+              ? { color: 'red' }
+              : { color: 'green' }
+          }
+        >
+          {this.state.alert.message}
+        </p>
+        <div style={{ display: 'flex', margin: '1em 0 1em 0' }}>
+          <Input
+            style={{ width: '350px' }}
+            name="invitationLink"
+            alt=""
+            value={this.state.invitationLink}
+            onChange={(e) => this.setState({ invitationLink: e.target.value })}
+          ></Input>
+          <Button
+            onClick={() => this.handleInvitationLink()}
+            style={{ marginLeft: '0.5em' }}
+          >
+            Accept invite
+          </Button>
+        </div>
         <Filter {...this.filterProps} />
         {selectedRowKeys.length > 0 && (
           <Row style={{ marginBottom: 24, textAlign: 'right', fontSize: 13 }}>
@@ -204,7 +292,7 @@ class JoinedGroup extends PureComponent {
             </Col>
           </Row>
         )}
-        <List {...this.listProps} />
+        <List {...this.listProps} groupData={this.state.groups} />
         <Modal {...this.modalProps} />
       </Page>
     )

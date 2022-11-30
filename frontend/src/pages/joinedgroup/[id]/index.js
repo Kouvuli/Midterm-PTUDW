@@ -13,7 +13,7 @@ import styles from './index.less'
 import groupService from '../../../services/group'
 import dayjs from 'dayjs'
 import store from 'store'
-
+import { Link } from 'umi'
 @connect(({ groupDetail, loading }) => ({ groupDetail, loading }))
 class JoinedGroupDetail extends PureComponent {
   urlSplit = window.location.href.split('/')
@@ -32,7 +32,7 @@ class JoinedGroupDetail extends PureComponent {
     const auth = store.get('auth')
     const { id } = auth
     const currentUser = this.state.users.find((user) => user.user.id === id)
-    return currentUser?.role?.name === 'CO-OWNER' 
+    return currentUser?.role?.name === 'CO-OWNER'
   }
 
   handleGenerateInvitationLink = () => {
@@ -163,7 +163,9 @@ class JoinedGroupDetail extends PureComponent {
 
     const { list, pagination, selectedRowKeys } = groupDetail
     console.log(groupDetail)
-    const filteredUsers = this.state.users.filter((user) => user.role.name !== 'KICKOUT')
+    const filteredUsers = this.state.users.filter(
+      (user) => user.role.name !== 'KICKOUT'
+    )
     return {
       dataSource: filteredUsers,
       loading: loading.effects['joinedGroupDetail/queryUserList'],
@@ -261,7 +263,12 @@ class JoinedGroupDetail extends PureComponent {
               <>
                 {this.state.groupDetailLoading ? null : (
                   <div key={key}>
-                    <div>Owner : {`${this.state.group[key].fullname} - ${this.state.group[key].email}`}</div>
+                    <div>
+                      Owner:{' '}
+                      <Link to={`/user/${this.state.group.admin.id}`}>
+                        {`${this.state.group[key].fullname} - ${this.state.group[key].email}`}
+                      </Link>
+                    </div>
                   </div>
                 )}
               </>
@@ -303,13 +310,15 @@ class JoinedGroupDetail extends PureComponent {
     }
     content.push(
       <>
-        {!this.state.groupDetailLoading && this.handleCheckRole() ? <Button
+        {!this.state.groupDetailLoading && this.handleCheckRole() ? (
+          <Button
             size="small"
             danger
             onClick={() => this.handleGenerateInvitationLink()}
           >
             Get invitation link
-          </Button> : null}
+          </Button>
+        ) : null}
       </>
     )
     content.push(
@@ -338,8 +347,12 @@ class JoinedGroupDetail extends PureComponent {
           <UserList
             {...this.userListProps}
             currentUserId={currentUserId}
-            userData={this.state.users}
-            handleChangeRole={this.handleCheckRole() ? this.handleChangeRole : undefined}
+            userData={this.state.users.filter(
+              (user) => user.role.name !== 'KICKOUT'
+            )}
+            handleChangeRole={
+              this.handleCheckRole() ? this.handleChangeRole : undefined
+            }
           />
         )}
 

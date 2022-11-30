@@ -27,67 +27,8 @@ const TwoColProps = {
 }
 
 class Filter extends Component {
-  timer
   formRef = React.createRef()
-  constructor(props) {
-    super(props)
-    this.state = {
-      invitationLink: '',
-      alert: {
-        message: '',
-        type: '',
-      },
-    }
-  }
 
-  componentWillUnmount() {
-    clearTimeout(this.timer)
-  }
-  handleInvitationLink = () => {
-    const link = this.state.invitationLink
-    invitationService.getGroupInfoFromInvitation(link).then((res) => {
-      const group = res.data
-      const auth = store.get('auth')
-      const { id: userId } = auth
-      userService
-        .addUserToGroup(userId, group.id)
-        .then((res) => {
-          this.setState({
-            alert: {
-              message: `Accepted invitation to group ${group.name}`,
-              type: 'success',
-            },
-          })
-          this.timer = setTimeout(
-            () => this.setState({ alert: { message: '', type: '' } }),
-            1000
-          )
-        })
-        .catch((error) => {
-          this.setState({
-            alert: {
-              message: `Failed to accept invitation`,
-              type: 'error',
-            },
-          })
-          this.timer = setTimeout(
-            () => this.setState({ alert: { message: '', type: '' } }),
-            1000
-          )
-        })
-    }).catch((error) => {
-      this.setState({
-        alert: {
-          message: `Failed to accept invitation`,
-          type: 'error',
-        },
-      })
-      this.timer = setTimeout(
-        () => this.setState({ alert: { message: '', type: '' } }),
-        1000
-      )
-    })
-  }
   handleFields = (fields) => {
     const { createTime } = fields
     if (createTime && createTime.length) {
@@ -142,33 +83,6 @@ class Filter extends Component {
 
     return (
       <>
-        <h3>Have an invitation link ?</h3>
-        <p
-          style={
-            !this.state.alert.message
-              ? { display: 'none' }
-              : this.state.alert.type === 'error'
-              ? { color: 'red' }
-              : { color: 'green' }
-          }
-        >
-          {this.state.alert.message}
-        </p>
-        <div style={{ display: 'flex', margin: '1em 0 1em 0' }}>
-          <Input
-            style={{ width: '350px' }}
-            name="invitationLink"
-            alt=""
-            value={this.state.invitationLink}
-            onChange={(e) => this.setState({ invitationLink: e.target.value })}
-          ></Input>
-          <Button
-            onClick={() => this.handleInvitationLink()}
-            style={{ marginLeft: '0.5em' }}
-          >
-            Accept invite
-          </Button>
-        </div>
         <Form
           ref={this.formRef}
           name="control-ref"
