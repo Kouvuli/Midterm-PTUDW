@@ -60,23 +60,6 @@ class List extends PureComponent {
           <p>{dayjs(record.create_at).format('YYYY-MM-DD')}</p>
         ),
       },
-      {
-        title: <Trans>Operation</Trans>,
-        key: 'operation',
-        fixed: 'right',
-        width: '8%',
-        render: (text, record) => {
-          return (
-            <DropOption
-              onMenuClick={(e) => this.handleMenuClick(record, e)}
-              menuOptions={[
-                { key: '1', name: t`Update` },
-                { key: '2', name: t`Delete` },
-              ]}
-            />
-          )
-        },
-      },
     ]
 
     return (

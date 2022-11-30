@@ -74,20 +74,6 @@ class UserList extends PureComponent {
         dataIndex: 'email',
         key: 'email',
       },
-      {
-        title: <Trans>Operation</Trans>,
-        key: 'operation',
-        fixed: 'right',
-        width: '8%',
-        render: (text, record, idx) => {
-          return (
-            <DropOption
-              onMenuClick={(e) => this.handleMenuClick(record, e)}
-              menuOptions={[]}
-            />
-          )
-        },
-      },
     ]
 
     const columns = [
@@ -134,35 +120,40 @@ class UserList extends PureComponent {
           <p>{this.props.userData[idx].user.email}</p>
         ),
       },
-      {
-        title: <Trans>Operation</Trans>,
-        key: 'operation',
-        fixed: 'right',
-        width: '8%',
-        render: (text, record, idx) => {
-          return (
-            <DropOption
-              onMenuClick={(e) => this.handleMenuClick(record, e)}
-              menuOptions={
-                // change this.state.role to record.role
-                // lock group user members
-                record.role.name === 'MEMBER'
-                  ? [
-                      { key: '1', name: t`Set Co-Owner`, idx: idx },
-                      { key: '2', name: t`Kick out`, idx: idx },
-                    ]
-                  : record.role.name === 'CO-OWNER'
-                  ? [
-                      { key: '1', name: t`Remove Co-Owner`, idx: idx },
-                      { key: '2', name: t`Kick out`, idx: idx },
-                    ]
-                  : [{ key: '1', name: t`Cake double U`, idx: idx }]
-              }
-            />
-          )
-        },
-      },
     ]
+
+    if (this.props.handleChangeRole) {
+      columns.push(
+        {
+          title: <Trans>Operation</Trans>,
+          key: 'operation',
+          fixed: 'right',
+          width: '8%',
+          render: (text, record, idx) => {
+            return (
+              <DropOption
+                onMenuClick={(e) => this.handleMenuClick(record, e)}
+                menuOptions={
+                  // change this.state.role to record.role
+                  // lock group user members
+                  record.role.name === 'MEMBER'
+                    ? [
+                        { key: '1', name: t`Set Co-Owner`, idx: idx },
+                        { key: '2', name: t`Kick out`, idx: idx },
+                      ]
+                    : record.role.name === 'CO-OWNER'
+                    ? [
+                        { key: '1', name: t`Remove Co-Owner`, idx: idx },
+                        { key: '2', name: t`Kick out`, idx: idx },
+                      ]
+                    : [{ key: '1', name: t`Cake double U`, idx: idx }]
+                }
+              />
+            )
+          },
+        },
+      )
+    }
 
     return (
       <Table

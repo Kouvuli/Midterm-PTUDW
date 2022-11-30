@@ -12,6 +12,7 @@ import UserModal from '../components/UserModal'
 import styles from './index.less'
 import groupService from '../../../services/group'
 import dayjs from 'dayjs'
+import store from 'store'
 
 @connect(({ groupDetail, loading }) => ({ groupDetail, loading }))
 class JoinedGroupDetail extends PureComponent {
@@ -25,6 +26,13 @@ class JoinedGroupDetail extends PureComponent {
       groupId: this.urlSplit[this.urlSplit.length - 1],
       group: {},
     }
+  }
+
+  handleCheckRole = () => {
+    const auth = store.get('auth')
+    const { id } = auth
+    const currentUser = this.state.users.find((user) => user.user.id === id)
+    return currentUser?.role?.name === 'CO-OWNER' 
   }
 
   handleGenerateInvitationLink = () => {
@@ -250,7 +258,7 @@ class JoinedGroupDetail extends PureComponent {
               <>
                 {this.state.groupDetailLoading ? null : (
                   <div key={key}>
-                    <div>Owner : {String(this.state.group[key].email)}</div>
+                    <div>Owner : {`${this.state.group[key].fullname} - ${this.state.group[key].email}`}</div>
                   </div>
                 )}
               </>
@@ -329,7 +337,7 @@ class JoinedGroupDetail extends PureComponent {
           <UserList
             {...this.userListProps}
             userData={this.state.users}
-            handleChangeRole={this.handleChangeRole}
+            handleChangeRole={this.handleCheckRole() ? this.handleChangeRole : undefined}
           />
         )}
 
