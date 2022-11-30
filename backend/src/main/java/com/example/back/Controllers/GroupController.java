@@ -106,12 +106,13 @@ public class GroupController {
 
         newGroup.setAdmin(groupService.getUserById(newGroup.getAdmin().getId()).get());
         newGroup.setCreateAt(new Timestamp(System.currentTimeMillis()));
+
 //        newGroup.getUsers().add(groupService.getUserById(newGroup.getAdmin().getId()));
 //        newGroup.getRoles().add(new UserGroup(groupService.getUserById(newGroup.getAdmin().getId()), newGroup, groupService.getRoleById(4l)));
-//        groupService.addGroup(newGroup);
-//        groupService.addGroupMember(new UserGroup(groupService.getUserById(newGroup.getAdmin().getId()), newGroup, groupService.getRoleById(4l)));
+        Group addedGroup=groupService.addGroup(newGroup);
+        groupService.addGroupMember(new UserGroup(groupService.getUserById(newGroup.getAdmin().getId()).get(), newGroup, groupService.getRoleById(4l)));
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponeObject("ok","Insert group succesfully",groupService.addGroup(newGroup))
+                new ResponeObject("ok","Insert group succesfully",addedGroup)
         );
     }
     @PostMapping("/{id}/members")

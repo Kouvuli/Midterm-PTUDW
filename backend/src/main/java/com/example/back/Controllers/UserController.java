@@ -3,6 +3,7 @@ package com.example.back.Controllers;
 
 import com.example.back.Entities.Group;
 import com.example.back.Entities.User;
+import com.example.back.Entities.UserGroup;
 import com.example.back.Payloads.request.Pagination;
 import com.example.back.Payloads.response.ResponeObject;
 import com.example.back.Payloads.response.ResponseObjectPagination;
@@ -74,10 +75,10 @@ public class UserController {
                     new ResponeObject("failed","Cannot find user with id="+id,"")
             );
         }
-        Set<Group> returnGroups=new HashSet<>();
+        Set<UserGroup> returnGroups=new HashSet<>();
         user.get().getRoles().forEach(userGroup -> {
             if(userGroup.getRole().getId()!=4){
-                returnGroups.add(userGroup.getGroup());
+                returnGroups.add(userGroup);
             }
         });
         return ResponseEntity.status(HttpStatus.OK).body(

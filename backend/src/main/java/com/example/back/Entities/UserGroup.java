@@ -18,6 +18,7 @@ public class UserGroup {
     private User user;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "group_id",referencedColumnName = "id")
     private Group group;
 
@@ -28,11 +29,11 @@ public class UserGroup {
     public UserGroup() {
     }
 
-//    public UserGroup(User user, Group group, Role role) {
-//        this.user = user;
-//        this.group = group;
-//        this.role = role;
-//    }
+    public UserGroup(User user, Group group, Role role) {
+        this.user = user;
+        this.group = group;
+        this.role = role;
+    }
 
     public Long getId() {
         return id;
