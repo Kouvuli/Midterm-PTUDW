@@ -215,9 +215,11 @@ class GroupDetail extends PureComponent {
 
     const { list, pagination, selectedRowKeys } = groupDetail
     console.log(groupDetail)
-    const filteredUsers = this.state.users.filter(
-      (user) => user.role.name !== 'KICKOUT'
-    )
+    // const filteredUsers = this.state.users.filter(
+    //   (user) => user.role.name !== 'KICKOUT'
+    // )
+    const filteredUsers = this.state.users
+
     return {
       dataSource: filteredUsers,
       loading: loading.effects['groupDetail/queryUserList'],
@@ -427,9 +429,7 @@ class GroupDetail extends PureComponent {
         ) : (
           <UserList
             {...this.userListProps}
-            userData={this.state.users.filter(
-              (user) => user.role.name !== 'KICKOUT'
-            )}
+            userData={this.state.users}
             handleChangeRole={this.handleChangeRole}
           />
         )}

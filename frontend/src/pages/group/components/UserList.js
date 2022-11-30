@@ -27,6 +27,8 @@ class UserList extends PureComponent {
         } else if (record.role.name === 'CO-OWNER') {
           // remove co-owner
           this.props.handleChangeRole(record.user.id, 1)
+        } else {
+          this.props.handleChangeRole(record.user.id, 1)
         }
         break
       case '2':
@@ -142,7 +144,7 @@ class UserList extends PureComponent {
                       { key: '1', name: t`Remove Co-Owner`, idx: idx },
                       { key: '2', name: t`Kick out`, idx: idx },
                     ]
-                  : [{ key: '1', name: t`Cake double U`, idx: idx }]
+                  : [{ key: '1', name: t`Restore Member`, idx: idx }]
               }
             />
           )
