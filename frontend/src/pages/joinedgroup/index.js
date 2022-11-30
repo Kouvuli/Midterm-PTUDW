@@ -25,6 +25,7 @@ class JoinedGroup extends PureComponent {
         message: '',
         type: '',
       },
+      acceptInvitationloading: false,
     }
   }
 
@@ -33,27 +34,55 @@ class JoinedGroup extends PureComponent {
   }
 
   handleInvitationLink = () => {
+    this.setState({ acceptInvitationloading: true })
     const link = this.state.invitationLink
+    const auth = store.get('auth')
+    const { id: userId } = auth
     invitationService
       .getGroupInfoFromInvitation(link)
       .then((res) => {
         const group = res.data
-        const auth = store.get('auth')
-        const { id: userId } = auth
-        userService
-          .addUserToGroup(userId, group.id)
+        console.log(group)
+        groupService
+          .getUserByGroupId(group.id)
           .then((res) => {
-            this.setState({
-              groups: [...this.state.groups, group],
-              alert: {
-                message: `Accepted invitation to group ${group.name}`,
-                type: 'success',
-              },
-            })
-            this.timer = setTimeout(
-              () => this.setState({ alert: { message: '', type: '' } }),
-              1000
+            console.log(res.data)
+            this.setState({ userInGroup: res.data })
+            const isUserInGroup = this.state.userInGroup.find(
+              (user) => user.user.id === userId
             )
+
+            if (group.admin.id !== userId && isUserInGroup === undefined) {
+              userService
+                .addUserToGroup(userId, group.id)
+                .then((res) => {
+                  this.setState({
+                    groups: [...this.state.groups, group],
+                    alert: {
+                      message: `Accepted invitation to group ${group.name}`,
+                      type: 'success',
+                      acceptInvitationloading: false,
+                    },
+                  })
+                  this.timer = setTimeout(
+                    () => this.setState({ alert: { message: '', type: '' } }),
+                    1000
+                  )
+                })
+                .catch((error) => {
+                  this.setState({
+                    alert: {
+                      message: `Failed to accept invitation`,
+                      type: 'error',
+                      acceptInvitationloading: false,
+                    },
+                  })
+                  this.timer = setTimeout(
+                    () => this.setState({ alert: { message: '', type: '' } }),
+                    1000
+                  )
+                })
+            } else throw new Error('Already in the group')
           })
           .catch((error) => {
             this.setState({
@@ -61,6 +90,7 @@ class JoinedGroup extends PureComponent {
                 message: `Failed to accept invitation`,
                 type: 'error',
               },
+              acceptInvitationloading: false,
             })
             this.timer = setTimeout(
               () => this.setState({ alert: { message: '', type: '' } }),
@@ -73,6 +103,7 @@ class JoinedGroup extends PureComponent {
           alert: {
             message: `Failed to accept invitation`,
             type: 'error',
+            acceptInvitationloading: false,
           },
         })
         this.timer = setTimeout(
@@ -169,7 +200,9 @@ class JoinedGroup extends PureComponent {
     const { dispatch, group, loading } = this.props
     const { list, pagination, selectedRowKeys } = group
 
-    const filteredGroups = this.state.groups.filter((group) => !group.lock)
+    const filteredGroups = [
+      ...this.state.groups.filter((group) => !group.lock),
+    ].filter((group) => group.role.name !== 'KICKOUT')
 
     return {
       // loading :
@@ -245,7 +278,9 @@ class JoinedGroup extends PureComponent {
   render() {
     const { group } = this.props
     const { selectedRowKeys } = group
-
+    const filteredGroups = [
+      ...this.state.groups.filter((group) => !group.lock),
+    ].filter((group) => group.role.name !== 'KICKOUT')
     return (
       <Page inner>
         <h3>Have an invitation link ?</h3>
@@ -292,7 +327,7 @@ class JoinedGroup extends PureComponent {
             </Col>
           </Row>
         )}
-        <List {...this.listProps} groupData={this.state.groups} />
+        <List {...this.listProps} groupData={filteredGroups} />
         <Modal {...this.modalProps} />
       </Page>
     )

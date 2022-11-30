@@ -144,7 +144,9 @@ class UserList extends PureComponent {
                       { key: '1', name: t`Remove Co-Owner`, idx: idx },
                       { key: '2', name: t`Kick out`, idx: idx },
                     ]
-                  : [{ key: '1', name: t`Restore Member`, idx: idx }]
+                  : record.role.name === 'KICKOUT'
+                  ? [{ key: '1', name: t`Restore Member`, idx: idx }]
+                  : []
               }
             />
           )

@@ -8,6 +8,7 @@ import { Button, Row, Col, DatePicker, Form, Input, Cascader } from 'antd'
 import city from 'utils/city'
 import invitationService from '../../../services/invitation'
 import userService from '../../../services/user'
+import groupService from '../../../services/group'
 import store from 'store'
 
 const { Search } = Input
@@ -37,6 +38,8 @@ class Filter extends Component {
         message: '',
         type: '',
       },
+      acceptInvitationloading: false,
+      userInGroup: [],
     }
   }
 
@@ -44,49 +47,82 @@ class Filter extends Component {
     clearTimeout(this.timer)
   }
   handleInvitationLink = () => {
+    this.setState({ acceptInvitationloading: true })
     const link = this.state.invitationLink
-    invitationService.getGroupInfoFromInvitation(link).then((res) => {
-      const group = res.data
-      const auth = store.get('auth')
-      const { id: userId } = auth
-      userService
-        .addUserToGroup(userId, group.id)
-        .then((res) => {
-          this.setState({
-            alert: {
-              message: `Accepted invitation to group ${group.name}`,
-              type: 'success',
-            },
+    const auth = store.get('auth')
+    const { id: userId } = auth
+    invitationService
+      .getGroupInfoFromInvitation(link)
+      .then((res) => {
+        const group = res.data
+        console.log(group)
+        groupService
+          .getUserByGroupId(group.id)
+          .then((res) => {
+            console.log(res.data)
+            this.setState({ userInGroup: res.data })
+            const isUserInGroup = this.state.userInGroup.find(
+              (user) => user.user.id === userId
+            )
+
+            if (group.admin.id !== userId && isUserInGroup === undefined) {
+              userService
+                .addUserToGroup(userId, group.id)
+                .then((res) => {
+                  this.setState({
+                    alert: {
+                      message: `Accepted invitation to group ${group.name}`,
+                      type: 'success',
+                      acceptInvitationloading: false,
+                    },
+                  })
+                  this.timer = setTimeout(
+                    () => this.setState({ alert: { message: '', type: '' } }),
+                    1000
+                  )
+                })
+                .catch((error) => {
+                  this.setState({
+                    alert: {
+                      message: `Failed to accept invitation`,
+                      type: 'error',
+                      acceptInvitationloading: false,
+                    },
+                  })
+                  this.timer = setTimeout(
+                    () => this.setState({ alert: { message: '', type: '' } }),
+                    1000
+                  )
+                })
+            } else throw new Error('Already in the group')
           })
-          this.timer = setTimeout(
-            () => this.setState({ alert: { message: '', type: '' } }),
-            1000
-          )
-        })
-        .catch((error) => {
-          this.setState({
-            alert: {
-              message: `Failed to accept invitation`,
-              type: 'error',
-            },
+          .catch((error) => {
+            this.setState({
+              alert: {
+                message: `Failed to accept invitation`,
+                type: 'error',
+              },
+              acceptInvitationloading: false,
+            })
+            this.timer = setTimeout(
+              () => this.setState({ alert: { message: '', type: '' } }),
+              1000
+            )
           })
-          this.timer = setTimeout(
-            () => this.setState({ alert: { message: '', type: '' } }),
-            1000
-          )
-        })
-    }).catch((error) => {
-      this.setState({
-        alert: {
-          message: `Failed to accept invitation`,
-          type: 'error',
-        },
       })
-      this.timer = setTimeout(
-        () => this.setState({ alert: { message: '', type: '' } }),
-        1000
-      )
-    })
+      .catch((error) => {
+        this.setState({
+          alert: {
+            message: `Failed to accept invitation`,
+            type: 'error',
+            acceptInvitationloading: false,
+          },
+        })
+        this.timer = setTimeout(
+          () => this.setState({ alert: { message: '', type: '' } }),
+          1000
+        )
+      })
   }
   handleFields = (fields) => {
     const { createTime } = fields
@@ -165,6 +201,7 @@ class Filter extends Component {
           <Button
             onClick={() => this.handleInvitationLink()}
             style={{ marginLeft: '0.5em' }}
+            loading={this.state.acceptInvitationloading}
           >
             Accept invite
           </Button>
