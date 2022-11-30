@@ -118,9 +118,6 @@ export default {
       } else if (queryLayout(config.layouts, locationPathname) !== 'public') {
         history.push({
           pathname: '/login',
-          search: stringify({
-            from: locationPathname,
-          }),
         })
       }
     },
