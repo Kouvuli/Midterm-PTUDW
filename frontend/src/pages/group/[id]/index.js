@@ -14,6 +14,7 @@ import groupService from '../../../services/group'
 import dayjs from 'dayjs'
 import invitationService from '../../../services/invitation'
 import { Link } from 'umi'
+import { copyToClipboard } from 'utils'
 @connect(({ groupDetail, loading }) => ({ groupDetail, loading }))
 class GroupDetail extends PureComponent {
   timer
@@ -36,9 +37,13 @@ class GroupDetail extends PureComponent {
 
   handleGenerateInvitationLink = () => {
     groupService.getInvitationLink(this.state.groupId).then((res) => {
-      console.log(res.data)
-      navigator.clipboard.writeText(res.data)
-      alert(`Invitation link had been copied to clipboard!`)
+      copyToClipboard(res.data)
+      .then(() => {
+        alert(`Invitation link had been copied to clipboard!`)
+      })
+      .catch(() => {
+        console.log('error copy clipboard')
+      })
     })
   }
 
