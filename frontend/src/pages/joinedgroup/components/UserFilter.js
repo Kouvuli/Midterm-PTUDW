@@ -91,20 +91,6 @@ class UserFilter extends Component {
           </Col>
           <Col
             {...ColProps}
-            xl={{ span: 4 }}
-            md={{ span: 8 }}
-            id="addressCascader"
-          >
-            <Form.Item name="address">
-              <Cascader
-                style={{ width: '100%' }}
-                options={city}
-                placeholder={t`Please pick an address`}
-              />
-            </Form.Item>
-          </Col>
-          <Col
-            {...ColProps}
             xl={{ span: 6 }}
             md={{ span: 8 }}
             sm={{ span: 12 }}
@@ -137,9 +123,6 @@ class UserFilter extends Component {
                   <Trans>Reset</Trans>
                 </Button>
               </div>
-              <Button type="ghost" onClick={onAdd}>
-                <Trans>Create</Trans>
-              </Button>
             </Row>
           </Col>
         </Row>

@@ -47,12 +47,6 @@ class List extends PureComponent {
         ),
       },
       {
-        title: <Trans>Total</Trans>,
-        dataIndex: 'total',
-        width: '6%',
-        key: 'total',
-      },
-      {
         title: <Trans>Create day</Trans>,
         dataIndex: 'create_at',
         key: 'create_at',
@@ -64,7 +58,7 @@ class List extends PureComponent {
         title: <Trans>Operation</Trans>,
         key: 'operation',
         fixed: 'right',
-        width: '8%',
+        width: '10%',
         render: (text, record) => {
           return (
             <DropOption

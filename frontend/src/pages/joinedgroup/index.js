@@ -108,9 +108,11 @@ class JoinedGroup extends PureComponent {
     const { dispatch, group, loading } = this.props
     const { list, pagination, selectedRowKeys } = group
 
+    const filteredGroups = this.state.groups.filter((group) => !group.lock)
+
     return {
       // loading :
-      dataSource: this.state.groups,
+      dataSource: filteredGroups,
       loading: loading.effects['joinedGroup/query'],
       pagination,
       onChange: (page) => {

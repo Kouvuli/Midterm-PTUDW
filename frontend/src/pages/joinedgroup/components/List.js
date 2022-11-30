@@ -47,12 +47,6 @@ class List extends PureComponent {
         ),
       },
       {
-        title: <Trans>Total</Trans>,
-        dataIndex: 'total',
-        width: '6%',
-        key: 'total',
-      },
-      {
         title: <Trans>Create day</Trans>,
         dataIndex: 'create_at',
         key: 'create_at',

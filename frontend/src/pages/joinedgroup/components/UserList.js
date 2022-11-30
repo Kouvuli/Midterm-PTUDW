@@ -44,7 +44,7 @@ class UserList extends PureComponent {
   }
 
   render() {
-    const { onDeleteItem, onEditItem, ...tableProps } = this.props
+    const { onDeleteItem, onEditItem, currentUserId, ...tableProps } = this.props
     const emptyColumns = [
       {
         title: <Trans>Avatar</Trans>,
@@ -68,6 +68,7 @@ class UserList extends PureComponent {
         title: <Trans>Birthday</Trans>,
         dataIndex: 'birthday',
         key: 'birthday',
+        width: '10%',
       },
       {
         title: <Trans>Email</Trans>,
@@ -107,6 +108,7 @@ class UserList extends PureComponent {
       {
         title: <Trans>Birthday</Trans>,
         dataIndex: 'birthday',
+        width: '10%',
         key: 'birthday',
         render: (text, record, idx) => (
           <p>{this.props.userData[idx].user.birthday}</p>
@@ -130,6 +132,9 @@ class UserList extends PureComponent {
           fixed: 'right',
           width: '8%',
           render: (text, record, idx) => {
+            if (record.id === currentUserId) {
+              return <></>
+            }
             return (
               <DropOption
                 onMenuClick={(e) => this.handleMenuClick(record, e)}

@@ -155,8 +155,9 @@ class GroupDetail extends PureComponent {
 
     const { list, pagination, selectedRowKeys } = groupDetail
     console.log(groupDetail)
+    const filteredUsers = this.state.users.filter((user) => user.role.name !== 'KICKOUT')
     return {
-      dataSource: this.state.users,
+      dataSource: filteredUsers,
       loading: loading.effects['groupDetail/queryUserList'],
       pagination,
       onChange: (page) => {

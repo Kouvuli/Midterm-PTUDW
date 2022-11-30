@@ -72,10 +72,18 @@ class Group extends PureComponent {
     const { dispatch, group, loading } = this.props
     const { currentItem, modalOpen, modalType } = group
     const handleUpdateGroups = (newGroup) => {
-      this.setState({ groups: [...this.state.groups, newGroup] })
+      let existedGroupIndex = this.state.groups.findIndex(group => group.id === newGroup.id)
+      if (existedGroupIndex > -1) {
+        let updateGroups = [...this.state.groups]
+        updateGroups[existedGroupIndex] = newGroup
+        this.setState({ groups: updateGroups })
+      } else {
+        this.setState({ groups: [...this.state.groups, newGroup] })
+      }
     }
     return {
       item: modalType === 'create' ? {} : currentItem,
+      modalType: modalType,
       open: modalOpen,
       destroyOnClose: true,
       maskClosable: false,
@@ -108,9 +116,11 @@ class Group extends PureComponent {
     const { dispatch, group, loading } = this.props
     const { list, pagination, selectedRowKeys } = group
 
+    const filteredGroups = this.state.groups.filter((group) => !group.lock)
+
     return {
       // loading :
-      dataSource: this.state.groups,
+      dataSource: filteredGroups,
       loading: loading.effects['group/query'],
       pagination,
       onChange: (page) => {

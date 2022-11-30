@@ -21,7 +21,7 @@ class GroupModal extends PureComponent {
   formRef = React.createRef()
 
   handleOk = () => {
-    const { item = {}, onOk, handleRefresh, onSuccessUpdate } = this.props
+    const { item = {}, modalType, onOk, handleRefresh, onSuccessUpdate } = this.props
 
     // this.formRef.current.validateFields()
     //   .then(values => {
@@ -38,13 +38,23 @@ class GroupModal extends PureComponent {
     const groupName = this.formRef.current.getFieldValue('name')
     const auth = store.get('auth')
     const { id: userId } = auth
-    groupService
-      .createGroup(userId, { name: groupName })
-      .then((res) => {
-        console.log(res)
-        onSuccessUpdate(res.data)
-      })
-      .catch((error) => console.log(error))
+    if (modalType === 'create') {
+      groupService
+        .createGroup(userId, { name: groupName })
+        .then((res) => {
+          console.log(res)
+          onSuccessUpdate(res.data)
+        })
+        .catch((error) => console.log(error))
+    } else {
+      groupService
+        .updateGroup({ name: groupName, id: item.id })
+        .then((res) => {
+          console.log(res)
+          onSuccessUpdate(res.data)
+        })
+        .catch((error) => console.log(error))
+    }
   }
 
   render() {

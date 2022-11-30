@@ -163,8 +163,9 @@ class JoinedGroupDetail extends PureComponent {
 
     const { list, pagination, selectedRowKeys } = groupDetail
     console.log(groupDetail)
+    const filteredUsers = this.state.users.filter((user) => user.role.name !== 'KICKOUT')
     return {
-      dataSource: this.state.users,
+      dataSource: filteredUsers,
       loading: loading.effects['joinedGroupDetail/queryUserList'],
       pagination,
       onChange: (page) => {
@@ -236,6 +237,8 @@ class JoinedGroupDetail extends PureComponent {
   render() {
     const { groupDetail } = this.props
     const { data, selectedRowKeys } = groupDetail
+    const auth = store.get('auth')
+    const { id: currentUserId } = auth
     const content = []
     content.push(<h2>Group detail</h2>)
     for (let key in this.state.group) {
@@ -300,15 +303,13 @@ class JoinedGroupDetail extends PureComponent {
     }
     content.push(
       <>
-        {this.state.groupDetailLoading ? null : (
-          <Button
+        {!this.state.groupDetailLoading && this.handleCheckRole() ? <Button
             size="small"
             danger
             onClick={() => this.handleGenerateInvitationLink()}
           >
             Get invitation link
-          </Button>
-        )}
+          </Button> : null}
       </>
     )
     content.push(
@@ -336,6 +337,7 @@ class JoinedGroupDetail extends PureComponent {
         ) : (
           <UserList
             {...this.userListProps}
+            currentUserId={currentUserId}
             userData={this.state.users}
             handleChangeRole={this.handleCheckRole() ? this.handleChangeRole : undefined}
           />

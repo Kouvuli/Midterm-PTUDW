@@ -67,26 +67,13 @@ class UserList extends PureComponent {
       {
         title: <Trans>Birthday</Trans>,
         dataIndex: 'birthday',
+        width: '10%',
         key: 'birthday',
       },
       {
         title: <Trans>Email</Trans>,
         dataIndex: 'email',
         key: 'email',
-      },
-      {
-        title: <Trans>Operation</Trans>,
-        key: 'operation',
-        fixed: 'right',
-        width: '8%',
-        render: (text, record, idx) => {
-          return (
-            <DropOption
-              onMenuClick={(e) => this.handleMenuClick(record, e)}
-              menuOptions={[]}
-            />
-          )
-        },
       },
     ]
 
@@ -121,6 +108,7 @@ class UserList extends PureComponent {
       {
         title: <Trans>Birthday</Trans>,
         dataIndex: 'birthday',
+        width: '10%',
         key: 'birthday',
         render: (text, record, idx) => (
           <p>{this.props.userData[idx].user.birthday}</p>
@@ -138,7 +126,7 @@ class UserList extends PureComponent {
         title: <Trans>Operation</Trans>,
         key: 'operation',
         fixed: 'right',
-        width: '8%',
+        width: '10%',
         render: (text, record, idx) => {
           return (
             <DropOption

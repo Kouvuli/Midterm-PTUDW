@@ -38,6 +38,13 @@ const createGroup = async (ownerId, groupData) => {
   const response = await axios.post(`${baseUrl}/api/v1/groups`, body)
   return response.data
 }
+const updateGroup = async (groupData) => {
+  const body = {
+    name: groupData.name,
+  }
+  const response = await axios.put(`${baseUrl}/api/v1/groups/${groupData.id}`, body)
+  return response.data
+}
 const getInvitationLink = async (groupId) => {
   const response = await axios.get(
     `${baseUrl}/api/v1/groups/${groupId}/invitationLink`
@@ -51,5 +58,6 @@ export default {
   updateMemberRoleInGroup,
   getGroupByGroupId,
   createGroup,
+  updateGroup,
   getInvitationLink,
 }
