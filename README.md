@@ -5,7 +5,7 @@ yarn install
 yarn start
 ```
 
-To run backend locally need Java version 1.8, IDE Intellij and change these config in backend\src\main\resources\application.properties to your local config with local server host and local database
+To run backend locally need Java version 1.8, IDE Intellij and change these config in backend\src\main\resources\application.properties to your local config with local server host and local database 
 
 Example
 ```
