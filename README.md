@@ -4,3 +4,12 @@ cd /frontend
 yarn install
 yarn start
 ```
+
+To run backend locally need Java version 1.8, IDE Intellij and change config file in backend\src\main\resources\application.properties to your localhost config 
+
+Example
+```
+spring.datasource.url=jdbc:postgresql://localhost:5432/VTT
+spring.datasource.username=postgres
+spring.datasource.password=1234
+```
