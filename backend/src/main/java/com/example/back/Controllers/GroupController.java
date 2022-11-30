@@ -77,7 +77,7 @@ public class GroupController {
         invitationTokenService.saveVerficationToken(invitationToken);
         String link = Constants.BACK_BASE_URL+ "/invitations/group/" + token;
         return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponeObject("ok","Get group succesfully",link)
+                        new ResponeObject("ok","Get group invitation link succesfully",link)
                 );
 
     }
