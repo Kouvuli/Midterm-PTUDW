@@ -18,7 +18,6 @@ public class UserGroup {
     private User user;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "group_id",referencedColumnName = "id")
     private Group group;
 

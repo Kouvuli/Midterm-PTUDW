@@ -5,6 +5,7 @@ import com.example.back.Entities.Group;
 import com.example.back.Entities.User;
 import com.example.back.Entities.UserGroup;
 import com.example.back.Payloads.request.Pagination;
+import com.example.back.Payloads.response.JoinedGroupResponse;
 import com.example.back.Payloads.response.ResponeObject;
 import com.example.back.Payloads.response.ResponseObjectPagination;
 import com.example.back.Services.UserService;
@@ -75,12 +76,14 @@ public class UserController {
                     new ResponeObject("failed","Cannot find user with id="+id,"")
             );
         }
-        Set<UserGroup> returnGroups=new HashSet<>();
+        Set<JoinedGroupResponse> returnGroups=new HashSet<>();
         user.get().getRoles().forEach(userGroup -> {
             if(userGroup.getRole().getId()!=4){
-                returnGroups.add(userGroup);
+                JoinedGroupResponse temp=new JoinedGroupResponse(userGroup.getGroup().getId(), userGroup.getGroup().getName(),userGroup.getGroup().isLock(),userGroup.getGroup().getCreateAt(),userGroup.getGroup().getAdmin(),userGroup.getRole());
+                returnGroups.add(temp);
             }
         });
+
         return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponeObject("ok","Query succesfully",returnGroups)
                 );
