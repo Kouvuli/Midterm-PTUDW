@@ -39,6 +39,10 @@ public class User {
     @JsonIgnore
     private Set<Group> ownGroup =new HashSet<>();
 
+    @OneToMany(mappedBy = "author")
+    @JsonIgnore
+    private Set<Presentation> presentations =new HashSet<>();
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     Set<UserGroup> roles=new HashSet<>();
