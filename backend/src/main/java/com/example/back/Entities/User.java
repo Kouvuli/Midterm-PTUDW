@@ -28,6 +28,9 @@ public class User {
     private boolean enable=false;
 
     private boolean lock=false;
+
+    @Column(name = "is_student")
+    private boolean isStudent;
     @Column(name = "create_at")
     private Timestamp createAt;
 
@@ -53,13 +56,14 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password, String fullname, String birthday, Timestamp createAt) {
+    public User(String username, String email, String password, String fullname, String birthday, Timestamp createAt,boolean isStudent) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.fullname = fullname;
         this.birthday = birthday;
         this.createAt = createAt;
+        this.isStudent=isStudent;
     }
 
     public String getUsername() {

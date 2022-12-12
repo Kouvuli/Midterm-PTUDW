@@ -1,5 +1,7 @@
 package com.example.back.Payloads.request;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -21,6 +23,17 @@ public class SignupRequest {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
+
+
+    private boolean student;
+
+    public boolean isStudent() {
+        return student;
+    }
+
+    public void setStudent(boolean student) {
+        this.student = student;
+    }
 
     public String getEmail() {
         return email;
