@@ -61,8 +61,10 @@ const EditPresentationBody = () => {
       ],
     },
   ])
+
   const [selected, setSelected] = useState(0)
   const selectedSlide = slides[selected]
+
   return (
     <div>
       <UtilsBar
