@@ -1,4 +1,4 @@
-import { Form, Input, Button, Select } from 'antd'
+import { Form, Input, Button, Select, FormListFieldData, Checkbox } from 'antd'
 import { useEffect } from 'react'
 import {
   DeleteOutlined,
@@ -19,6 +19,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
   const onOptionValueChanged = (e, idx) => {
     const newSlides = [...slides]
     newSlides[selected].options[idx].value = e.target.value
+
     setSlides(newSlides)
   }
   const handleMenu = () => {}
@@ -35,30 +36,55 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
     const newSlides = [...slides]
     newSlides[selected].options = [
       ...options,
-      { name: `Option ${options.length + 1}` },
+      {
+        placeholder: `Option ${options.length + 1}`,
+        value: '',
+        checked: false,
+      },
     ]
     setSlides(newSlides)
   }
   const optionsMapped = () => {
     return options.map((option) => option.value)
   }
+  const handleDisplay = () => {
+    setDisplay(false)
+  }
+
+  const handleCheckBox = (e, idx) => {
+    const newSlide = [...slides]
+    newSlide[selected].options[idx].checked = e.target.checked
+    setSlides(newSlide)
+  }
   useEffect(() => {
     form.resetFields()
   }, [selected])
   useEffect(() => {
-    options.forEach((option, idx) => {
-      const name = `option${idx}`
-      console.log(name, option.value)
-      form.setFieldValue(name, option.value)
-    })
+    // const fields = form.getFieldsValue()
+    // const { formOptions } = fields
+    // console.log('efffect', formOptions)
+    // options.forEach((option, idx) =>
+    //   Object.assign(formOptions[idx], { value: option.value })
+    // )
+    // form.setFieldValue({ formOptions })
   }, [])
+
   return (
-    <div style={{}} className="right-sidebar">
+    <div
+      className="right-sidebar"
+      onClick={display === true ? handleDisplay : null}
+      style={display === false ? { zIndex: 10 } : { zIndex: 2 }}
+    >
       <div className="right-side-sub-top-bar">
         <div style={{ margin: 5 }}>
           <h3>Saved</h3>
         </div>
-        <Button type="primary" size="middle" className="done-btn">
+        <Button
+          type="primary"
+          size="middle"
+          className="done-btn"
+          onClick={() => setDisplay(true)}
+        >
           Done
         </Button>
       </div>
@@ -93,7 +119,11 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
         />
       </div>
 
-      <Form form={form} layout="vertical" initialValues={{ question, options }}>
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={{ question, formOptions: options }}
+      >
         <Form.Item
           label={<h2>Your question</h2>}
           tooltip="Your slide question"
@@ -106,6 +136,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
             onChange={(e) => updateQuestion(e.target.value)}
           />
         </Form.Item>
+
         <Form.Item
           label={<h2>Options</h2>}
           tooltip={{
@@ -115,6 +146,40 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
           style={{ margin: 20 }}
         >
           {options.map((option, idx) => {
+            return (
+              <div
+                style={{ margin: '15px 0 0 0', fontSize: '20px' }}
+                key={idx}
+                name={`option${idx}`}
+              >
+                <div style={{ display: 'flex' }}>
+                  <input
+                    type="checkbox"
+                    onChange={(e) => handleCheckBox(e, idx)}
+                    checked={option.checked}
+                    style={{
+                      height: 30,
+                      width: 30,
+                      margin: '5px 10px 5px 5px',
+                    }}
+                  ></input>
+                  <input
+                    placeholder={option.value === '' ? option.placeholder : ''}
+                    onChange={(e) => onOptionValueChanged(e, idx)}
+                    value={option.value}
+                    className="option-input"
+                  />
+                  <button
+                    onClick={() => removeOption(idx)}
+                    style={{ margin: '0 0 0 5px' }}
+                  >
+                    <DeleteOutlined></DeleteOutlined>
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+          {/* {options.map((option, idx) => {
             console.log(option.value)
             return (
               <Form.Item
@@ -140,7 +205,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
                 </div>
               </Form.Item>
             )
-          })}
+          })} */}
         </Form.Item>
         <Form.Item>
           <Button className="add-option-btn" onClick={() => addNewOption()}>

@@ -1,5 +1,6 @@
 import { BarChartOutlined } from '@ant-design/icons'
 import { BarChart, XAxis, Bar, ResponsiveContainer } from 'recharts'
+
 const SlideContent = ({ type, size, slide }) => {
   const exampleData = () => {
     const data = []
@@ -7,9 +8,9 @@ const SlideContent = ({ type, size, slide }) => {
       data.push({ name: option.value, total: 0 })
     )
     data[0].total = 1
-    console.log(data)
     return data
   }
+
   const shortQuestion = slide.question.slice(0, 20) + '...'
   if (size === 'small') {
     return (
@@ -60,7 +61,10 @@ const SlideContent = ({ type, size, slide }) => {
             </p>
             <h2>{slide.question}</h2>
 
-            <div style={{ width: '100%', padding: '32px 32px 32px 32px' }}>
+            <div
+              style={{ width: '100%', padding: '32px 32px 32px 32px' }}
+              className="center-content-display"
+            >
               <ResponsiveContainer width="100%" aspect={2}>
                 <BarChart data={exampleData()}>
                   <XAxis dataKey="name"></XAxis>
