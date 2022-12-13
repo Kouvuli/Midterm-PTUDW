@@ -2,6 +2,7 @@ import LeftSidebar from './LeftSidebar'
 import SlideContent from './SlideContent'
 import RightSidebar from './RightSidebar'
 import { useState } from 'react'
+import UtilsBar from './UtilsBar'
 const EditPresentationBody = () => {
   const [display, setDisplay] = useState(true)
   const [slides, setSlides] = useState([
@@ -9,27 +10,54 @@ const EditPresentationBody = () => {
       id: 'sl1',
       question: 'Hi there fellowaaaaaaa',
       options: [
-        { name: 'Option 1', value: 'aaaaa' },
-        { name: 'Option 2', value: '' },
-        { name: 'Option 3', value: '' },
+        { placeholder: 'Option 1', value: 'aaaaa', checked: false },
+        { placeholder: 'Option 2', value: '', checked: false },
+        { placeholder: 'Option 3', value: '', checked: false },
       ],
     },
     {
       id: 'sl2',
       question: 'Hi there Ya-all',
       options: [
-        { name: 'Option 1', value: '' },
-        { name: 'Option 2', value: '' },
-        { name: 'Option 3', value: '' },
+        { placeholder: 'Option 1', value: '', checked: false },
+        { placeholder: 'Option 2', value: '', checked: false },
+        { placeholder: 'Option 3', value: '', checked: false },
       ],
     },
     {
       id: 'sl3',
       question: 'Hi there Vinh',
       options: [
-        { name: 'Option 1', value: '' },
-        { name: 'Option 2', value: '' },
-        { name: 'Option 3', value: '' },
+        { placeholder: 'Option 1', value: '', checked: false },
+        { placeholder: 'Option 2', value: '', checked: false },
+        { placeholder: 'Option 3', value: '', checked: false },
+      ],
+    },
+    {
+      id: 'sl4',
+      question: 'Hi there Vinh1',
+      options: [
+        { placeholder: 'Option 1', value: '', checked: false },
+        { placeholder: 'Option 2', value: '', checked: false },
+        { placeholder: 'Option 3', value: '', checked: false },
+      ],
+    },
+    {
+      id: 'sl5',
+      question: 'Hi there Vinh2',
+      options: [
+        { placeholder: 'Option 1', value: '', checked: false },
+        { placeholder: 'Option 2', value: '', checked: false },
+        { placeholder: 'Option 3', value: '', checked: false },
+      ],
+    },
+    {
+      id: 'sl6',
+      question: 'Hi there Vinh3',
+      options: [
+        { placeholder: 'Option 1', value: '', checked: false },
+        { placeholder: 'Option 2', value: '', checked: false },
+        { placeholder: 'Option 3', value: '', checked: false },
       ],
     },
   ])
@@ -37,6 +65,13 @@ const EditPresentationBody = () => {
   const selectedSlide = slides[selected]
   return (
     <div>
+      <UtilsBar
+        className="main-util-bar"
+        type="main"
+        slides={slides}
+        setSlides={setSlides}
+        selected={selected}
+      ></UtilsBar>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <LeftSidebar
           slides={slides}
