@@ -12,8 +12,6 @@ import dayjs from 'dayjs'
 import styles from './index.less'
 import EditPresentationBody from './components/EditPresentationBody'
 
-const FormItem = Form.Item
-
 @connect(({ loading, dispatch }) => ({ loading, dispatch }))
 class PresentationDetail extends PureComponent {
   render() {
@@ -45,52 +43,6 @@ class PresentationDetail extends PureComponent {
 
     return (
       <Fragment>
-        {/* <div className={styles.form}>
-          <div className={styles.logo}>
-            <img alt="logo" src={config.logoPath} />
-            <span>{config.siteName}</span>
-          </div>
-          <Form onFinish={handleOk}>
-            <FormItem name="username" rules={[{ required: true }]} hasFeedback>
-              <Input placeholder={t`Username`} />
-            </FormItem>
-            <FormItem t name="email" rules={[{ required: true, pattern: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/, message: t`The input is not valid E-mail!`, }]} hasFeedback>
-              <Input placeholder={t`Email`} />
-            </FormItem>
-            <FormItem name="fullname" rules={[{ required: true }]} hasFeedback>
-              <Input placeholder={t`Fullname`} />
-            </FormItem>
-            <FormItem name="birthday" rules={[{ required: true }]} hasFeedback>
-              <DatePicker className={styles.dob} format="DD/MM/YYYY" placeholder="Date of Birth" />
-            </FormItem>
-            <Trans
-              id="Password"
-              render={({ translation }) => (
-                <FormItem
-                  name="password"
-                  rules={[{ required: true }]}
-                  hasFeedback
-                >
-                  <Input type="password" placeholder={translation} required />
-                </FormItem>
-              )}
-            />
-            <Row>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading.effects.register}
-              >
-                <Trans>Register</Trans>
-              </Button>
-              <p>
-                <span className="margin-right">
-                  Already have an account? <Link to="/login">Login now</Link>
-                </span>
-              </p>
-            </Row>
-          </Form>
-        </div> */}
         <EditPresentationBody></EditPresentationBody>
         <div className={styles.footer}>
           <GlobalFooter links={footerLinks} copyright={config.copyright} />

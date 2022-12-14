@@ -4,14 +4,16 @@ import { BarChart, XAxis, Bar, ResponsiveContainer } from 'recharts'
 const SlideContent = ({ type, size, slide }) => {
   const exampleData = () => {
     const data = []
-    slide.options.forEach((option) =>
+    slide?.options.forEach((option) =>
       data.push({ name: option.value, total: 0 })
     )
-    data[0].total = 1
+    if (data && data[0]) {
+      data[0].total = 1
+    }
     return data
   }
 
-  const shortQuestion = slide.question.slice(0, 20) + '...'
+  const shortQuestion = (slide?.question?.slice(0, 20) || '') + '...'
   if (size === 'small') {
     return (
       <div
@@ -24,7 +26,7 @@ const SlideContent = ({ type, size, slide }) => {
         <div style={{ display: 'flex', margin: 20 }}>
           <BarChartOutlined style={{ fontSize: 40 }}></BarChartOutlined>
           <p style={{ padding: 10 }}>
-            {slide.question.length <= 20 ? slide.question : shortQuestion}
+            {slide?.question?.length <= 20 ? slide.question : shortQuestion}
           </p>
         </div>
       </div>
@@ -59,7 +61,7 @@ const SlideContent = ({ type, size, slide }) => {
             <p>
               Go to <b>www.example.com</b> and use code <b>1234-5678</b>
             </p>
-            <h2>{slide.question}</h2>
+            <h2>{slide?.question || ''}</h2>
 
             <div
               style={{ width: '100%', padding: '32px 32px 32px 32px' }}

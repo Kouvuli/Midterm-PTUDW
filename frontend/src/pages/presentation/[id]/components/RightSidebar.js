@@ -8,17 +8,26 @@ import {
 
 const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
   const [form] = Form.useForm()
-  const { question, options } = slides[selected]
+  let question
+  let options
+  if (slides && slides[selected]) {
+    question = slides[selected].question
+    options = slides[selected].options
+  }
 
   const updateQuestion = (newValue) => {
     const newSlides = [...slides]
-    newSlides[selected].question = newValue
+    if (newSlides && newSlides[selected]) {
+      newSlides[selected].question = newValue
+    }
     setSlides(newSlides)
   }
 
   const onOptionValueChanged = (e, idx) => {
     const newSlides = [...slides]
-    newSlides[selected].options[idx].value = e.target.value
+    if (newSlides && newSlides[selected]) {
+      newSlides[selected].options[idx].value = e.target.value
+    }
 
     setSlides(newSlides)
   }
@@ -26,9 +35,11 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
 
   const removeOption = (targetIdx) => {
     const newSlides = [...slides]
-    newSlides[selected].options = options.filter(
-      (option, idx) => targetIdx !== idx
-    )
+    if (newSlides && newSlides[selected]) {
+      newSlides[selected].options = options.filter(
+        (option, idx) => targetIdx !== idx
+      )
+    }
     setSlides(newSlides)
   }
 
@@ -45,7 +56,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
     setSlides(newSlides)
   }
   const optionsMapped = () => {
-    return options.map((option) => option.value)
+    return options?.map((option) => option.value)
   }
   const handleDisplay = () => {
     setDisplay(false)
@@ -145,7 +156,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
           }}
           style={{ margin: 20 }}
         >
-          {options.map((option, idx) => {
+          {options?.map((option, idx) => {
             return (
               <div
                 style={{ margin: '15px 0 0 0', fontSize: '20px' }}

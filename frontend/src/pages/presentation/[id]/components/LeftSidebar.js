@@ -9,7 +9,7 @@ const LeftSidebar = ({
   setDisplay,
 }) => {
   const onSlideClick = (id) => {
-    const idx = slides.findIndex((slide) => slide.id === id)
+    const idx = slides?.findIndex((slide) => slide.id === id)
     setSelected(idx)
   }
 
@@ -19,7 +19,7 @@ const LeftSidebar = ({
       onClick={display === false ? () => setDisplay(true) : null}
       style={display === true ? { zIndex: 10 } : { zIndex: 2 }}
     >
-      {slides.map((slide, idx) => (
+      {slides?.map((slide, idx) => (
         <SmallSlide
           slide={slide}
           key={idx}
