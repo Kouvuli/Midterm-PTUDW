@@ -45,6 +45,12 @@ const updateGroup = async (groupData) => {
   const response = await axios.put(`${baseUrl}/api/v1/groups/${groupData.id}`, body)
   return response.data
 }
+
+const deleteGroup = async (groupData) => {
+  const response = await axios.delete(`${baseUrl}/api/v1/groups/${groupData.id}`)
+  return response.data
+}
+
 const getInvitationLink = async (groupId) => {
   const response = await axios.get(
     `${baseUrl}/api/v1/groups/${groupId}/invitationLink`
@@ -59,5 +65,6 @@ export default {
   getGroupByGroupId,
   createGroup,
   updateGroup,
+  deleteGroup,
   getInvitationLink,
 }

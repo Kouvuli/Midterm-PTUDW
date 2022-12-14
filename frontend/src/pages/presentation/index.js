@@ -135,6 +135,11 @@ class Presentation extends PureComponent {
           type: 'presentation/delete',
           payload: id,
         }).then(() => {
+          presentationService.deletePresentation({ id })
+          .then(res => {
+            const newPresentations = this.state.presentations.filter(presentation => presentation.id !== id)
+            this.setState({ presentations: newPresentations })
+          })
           this.handleRefresh({
             page:
               list.length === 1 && pagination.current > 1

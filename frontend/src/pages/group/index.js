@@ -134,6 +134,11 @@ class Group extends PureComponent {
           type: 'group/delete',
           payload: id,
         }).then(() => {
+          groupService.deleteGroup({ id })
+          .then(res => {
+            const newGroups = this.state.groups.filter(group => group.id !== id)
+            this.setState({ groups: newGroups })
+          })
           this.handleRefresh({
             page:
               list.length === 1 && pagination.current > 1
