@@ -17,6 +17,8 @@ public class QuestionService {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private AnswerService answerService;
     public Page<Question> getQuestion(Pageable pageable){
         return questionRepository.findAll(pageable);
     }
@@ -29,6 +31,9 @@ public class QuestionService {
     }
 
     public void deleteById(Long id){
+        questionRepository.findById(id).get().getOptions().forEach(answer -> {
+            answerService.deleteById(answer.getId());
+        });
         questionRepository.deleteById(id);
     }
 }
