@@ -10,7 +10,6 @@ import config from 'utils/config'
 import dayjs from 'dayjs'
 
 import styles from './index.less'
-import EditPresentationBody from './EditPresentationBody'
 
 const FormItem = Form.Item
 
@@ -45,7 +44,7 @@ class Register extends PureComponent {
 
     return (
       <Fragment>
-        {/* <div className={styles.form}>
+        <div className={styles.form}>
           <div className={styles.logo}>
             <img alt="logo" src={config.logoPath} />
             <span>{config.siteName}</span>
@@ -90,8 +89,7 @@ class Register extends PureComponent {
               </p>
             </Row>
           </Form>
-        </div> */}
-        <EditPresentationBody></EditPresentationBody>
+        </div>
         <div className={styles.footer}>
           <GlobalFooter links={footerLinks} copyright={config.copyright} />
         </div>
