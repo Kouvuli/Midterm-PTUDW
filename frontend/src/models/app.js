@@ -3,7 +3,7 @@
 import { history } from 'umi'
 import { stringify } from 'qs'
 import store from 'store'
-const { pathToRegexp } = require("path-to-regexp")
+const { pathToRegexp } = require('path-to-regexp')
 import { ROLE_TYPE } from 'utils/constant'
 import { queryLayout, isEmpty, isExpired } from 'utils'
 import { CANCEL_REQUEST_MESSAGE } from 'utils/constant'
@@ -52,7 +52,7 @@ export default {
       dispatch({ type: 'query' })
     },
     setupHistory({ dispatch, history }) {
-      history.listen(location => {
+      history.listen((location) => {
         dispatch({
           type: 'updateState',
           payload: {
@@ -84,7 +84,7 @@ export default {
         goDashboard()
         return
       }
-      const { locationPathname } = yield select(_ => _.app)
+      const { locationPathname } = yield select((_) => _.app)
       const auth = store.get('auth')
       if (auth && !isEmpty(auth)) {
         const { expired_date } = auth
@@ -92,15 +92,15 @@ export default {
           yield put({ type: 'signOut' })
         }
         const { list } = yield call(queryRouteList)
-        const permissions = { role: ROLE_TYPE.ADMIN} 
+        const permissions = { role: ROLE_TYPE.ADMIN }
         let routeList = list
         if (
           permissions.role === ROLE_TYPE.ADMIN ||
           permissions.role === ROLE_TYPE.DEVELOPER
         ) {
-          permissions.visit = list.map(item => item.id)
+          permissions.visit = list.map((item) => item.id)
         } else {
-          routeList = list.filter(item => {
+          routeList = list.filter((item) => {
             const cases = [
               permissions.visit.includes(item.id),
               item.mpid
@@ -108,7 +108,7 @@ export default {
                 : true,
               item.bpid ? permissions.visit.includes(item.bpid) : true,
             ]
-            return cases.every(_ => _)
+            return cases.every((_) => _)
           })
         }
         store.set('routeList', routeList)
@@ -116,9 +116,9 @@ export default {
         store.set('isInit', true)
         goDashboard()
       } else if (queryLayout(config.layouts, locationPathname) !== 'public') {
-        history.push({
-          pathname: '/login',
-        })
+        // history.push({
+        //   pathname: '/login',
+        // })
       }
     },
 

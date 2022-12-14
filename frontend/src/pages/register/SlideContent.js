@@ -33,7 +33,7 @@ const SlideContent = ({ type, size, slide }) => {
     return (
       <div
         style={{
-          height: 'calc(100vh - 70px)',
+          height: 'calc(100vh - 140px)',
           borderBottom: '1px solid grey',
           borderRight: '1px solid grey',
           overflow: 'hidden',
