@@ -13,6 +13,7 @@ import groupService from '../../services/group'
 import store from 'store'
 import invitationService from '../../services/invitation'
 import userService from '../../services/user'
+
 @connect(({ group, loading }) => ({ group, loading }))
 class JoinedGroup extends PureComponent {
   timer

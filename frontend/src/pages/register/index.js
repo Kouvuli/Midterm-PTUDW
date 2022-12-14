@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect, Link } from 'umi'
-import { Button, Row, Input, Form, DatePicker } from 'antd'
+import { Button, Row, Input, Form, DatePicker, Checkbox } from 'antd'
 import { GlobalFooter } from 'components'
 import { GithubOutlined } from '@ant-design/icons'
 import { t, Trans } from '@lingui/macro'
@@ -74,6 +74,10 @@ class Register extends PureComponent {
                 </FormItem>
               )}
             />
+            <FormItem name="is_student" valuePropName="checked" hasFeedback>
+              <Checkbox>Are you a student?</Checkbox>
+            </FormItem>
+            
             <Row>
               <Button
                 type="primary"

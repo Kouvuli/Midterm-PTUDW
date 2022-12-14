@@ -2,14 +2,11 @@ import React from 'react'
 import { FrownOutlined } from '@ant-design/icons'
 import { Page } from 'components'
 import styles from './404.less'
+import { Redirect } from 'umi'
+import { t } from "@lingui/macro"
 
 const Error = () => (
-  <Page inner>
-    <div className={styles.error}>
-      <FrownOutlined />
-      <h1>404 Not Found</h1>
-    </div>
-  </Page>
+  <Redirect to={t`/dashboard`} />
 )
 
 export default Error

@@ -10,8 +10,6 @@ import { CANCEL_REQUEST_MESSAGE } from 'utils/constant'
 import api from 'api'
 import config from 'config'
 
-const { queryRouteList, logoutUser } = api
-
 const goDashboard = () => {
   if (pathToRegexp(['/', '/login']).exec(window.location.pathname)) {
     history.push({
@@ -91,7 +89,125 @@ export default {
         if (isExpired(expired_date)) {
           yield put({ type: 'signOut' })
         }
-        const { list } = yield call(queryRouteList)
+        const list = [
+          {
+            id: '1',
+            icon: 'dashboard',
+            name: 'Dashboard',
+            zh: {
+              name: '仪表盘'
+            },
+            'pt-br': {
+              name: 'Dashboard'
+            },
+            route: '/dashboard',
+          },
+          {
+            id: '21',
+            menuParentId: '-1',
+            breadcrumbParentId: '1',
+            name: 'User Detail',
+            zh: {
+              name: '用户详情'
+            },
+            'pt-br': {
+              name: 'Detalhes do usuário'
+            },
+            route: '/user/:id',
+          },
+          {
+            id: '5',
+            breadcrumbParentId: '1',
+            name: 'Groups',
+            zh: {
+              name: 'Groups'
+            },
+            'pt-br': {
+              name: 'Groups'
+            },
+            icon: 'code-o',
+          },
+          {
+            id: '51',
+            breadcrumbParentId: '5',
+            menuParentId: '5',
+            name: 'My Groups',
+            zh: {
+              name: 'My Groups'
+            },
+            'pt-br': {
+              name: 'My Groups'
+            },
+            icon: 'line-chart',
+            route: '/group',
+          },
+          {
+            id: '52',
+            breadcrumbParentId: '5',
+            menuParentId: '5',
+            name: 'Joined Groups',
+            zh: {
+              name: 'Joined Groups'
+            },
+            'pt-br': {
+              name: 'Joined Groups'
+            },
+            icon: 'bar-chart',
+            route: '/joinedgroup',
+          },
+          {
+            id: '53',
+            menuParentId: '-1',
+            breadcrumbParentId: '1',
+            name: 'Group Detail',
+            zh: {
+              name: 'Group Detail'
+            },
+            'pt-br': {
+              name: 'Group Detail'
+            },
+            route: '/group/:id',
+          },
+          {
+            id: '54',
+            menuParentId: '-1',
+            breadcrumbParentId: '1',
+            name: 'Joined Group Detail',
+            zh: {
+              name: 'Joined Group Detail'
+            },
+            'pt-br': {
+              name: 'Joined Group Detail'
+            },
+            route: '/joinedgroup/:id',
+          },
+          {
+            id: '55',
+            breadcrumbParentId: '1',
+            name: 'Presentations',
+            zh: {
+              name: '用户管理'
+            },
+            'pt-br': {
+              name: 'Usuário'
+            },
+            icon: 'user',
+            route: '/presentation',
+          },
+          {
+            id: '56',
+            menuParentId: '-1',
+            breadcrumbParentId: '1',
+            name: 'Presentation Detail',
+            zh: {
+              name: '用户详情'
+            },
+            'pt-br': {
+              name: 'Detalhes do usuário'
+            },
+            route: '/presentation/:id',
+          },
+        ]
         const permissions = { role: ROLE_TYPE.ADMIN} 
         let routeList = list
         if (
@@ -118,22 +234,22 @@ export default {
       } else if (queryLayout(config.layouts, locationPathname) !== 'public') {
         history.push({
           pathname: '/login',
-        })
+        }) 
       }
     },
 
+    // eslint-disable-next-line require-yield
     *signOut({ payload }, { call, put }) {
-      const data = yield call(logoutUser)
-      if (data.success) {
-        store.set('routeList', [])
-        store.set('permissions', { visit: [] })
-        store.set('user', {})
-        store.set('isInit', false)
-        store.set('auth', null)
-        yield put({ type: 'query' })
-      } else {
-        throw data
-      }
+      store.set('isInit', false)
+      store.set('routeList', [])
+      store.set('permissions', { visit: [] })
+      store.set('user', {})
+      store.set('auth', null)
+      setTimeout(() => {
+        history.push({
+            pathname: '/login'
+        }) 
+      }, 100)
     },
   },
   reducers: {

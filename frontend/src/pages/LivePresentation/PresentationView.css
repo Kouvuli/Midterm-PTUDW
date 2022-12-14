@@ -1,0 +1,10 @@
+.result-view {
+}
+
+@media (max-width: 960px) {
+  .result-view {
+    position: absolute;
+    top: 25%;
+    width: 100%;
+  }
+}
