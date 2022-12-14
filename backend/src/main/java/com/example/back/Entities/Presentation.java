@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 
 @Entity
@@ -28,7 +29,7 @@ public class Presentation {
 
     @OneToMany(mappedBy = "presentation")
     @JsonIgnore
-    private Set<Question> questions =new HashSet<>();
+    private Set<Question> questions =new TreeSet<>();
 
     @Column(name = "create_at")
     private Timestamp createAt;

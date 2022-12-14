@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "questions")
-public class Question {
+public class Question implements Comparable<Question>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -83,5 +83,10 @@ public class Question {
 
     public void setCreateAt(Timestamp createAt) {
         this.createAt = createAt;
+    }
+
+    @Override
+    public int compareTo(Question o) {
+        return this.getCreateAt().compareTo(o.getCreateAt());
     }
 }
