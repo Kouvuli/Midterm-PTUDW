@@ -181,6 +181,32 @@ export default {
             },
             route: '/joinedgroup/:id',
           },
+          {
+            id: '55',
+            breadcrumbParentId: '1',
+            name: 'Presentations',
+            zh: {
+              name: '用户管理'
+            },
+            'pt-br': {
+              name: 'Usuário'
+            },
+            icon: 'user',
+            route: '/presentation',
+          },
+          {
+            id: '56',
+            menuParentId: '-1',
+            breadcrumbParentId: '1',
+            name: 'Presentation Detail',
+            zh: {
+              name: '用户详情'
+            },
+            'pt-br': {
+              name: 'Detalhes do usuário'
+            },
+            route: '/presentation/:id',
+          },
         ]
         const permissions = { role: ROLE_TYPE.ADMIN} 
         let routeList = list
