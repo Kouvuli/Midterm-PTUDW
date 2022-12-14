@@ -1,6 +1,6 @@
 import { Button } from 'antd'
 
-const UtilsBar = ({ type, onAddSlide }) => {
+const UtilsBar = ({ type, onAddSlide, onRemoveSlide }) => {
   return (
     <div>
       <div className={type === 'main' ? 'utils-bar' : 'sub-utils-bar'}>
@@ -8,7 +8,7 @@ const UtilsBar = ({ type, onAddSlide }) => {
           <Button type="primary" size="large" className="utils-btn" onClick={onAddSlide}>
             New slide
           </Button>
-          <Button type="primary" size="large" className="utils-btn">
+          <Button type="primary" size="large" className="utils-btn" onClick={onRemoveSlide}>
             Remove
           </Button>
         </div>

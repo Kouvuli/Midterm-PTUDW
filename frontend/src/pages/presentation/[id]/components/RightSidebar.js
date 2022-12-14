@@ -1,12 +1,24 @@
 import { Form, Input, Button, Select, FormListFieldData, Checkbox } from 'antd'
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import {
   DeleteOutlined,
   InfoCircleOutlined,
   BarChartOutlined,
 } from '@ant-design/icons'
+import answerService from '../../../../services/answer'
+import questionService from '../../../../services/question'
 
-const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
+const debounce = (func, timeout=1000) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, timeout);
+  };
+};
+
+const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onCheckBox }) => {
   const [form] = Form.useForm()
   let question
   let options
@@ -16,6 +28,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
   }
 
   const updateQuestion = (newValue) => {
+    questionService.updateQuestion({id: slides[selected]?.id, question: newValue})
     const newSlides = [...slides]
     if (newSlides && newSlides[selected]) {
       newSlides[selected].question = newValue
@@ -23,7 +36,8 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
     setSlides(newSlides)
   }
 
-  const onOptionValueChanged = (e, idx) => {
+  const onOptionValueChanged = (e, idx, targetId) => {
+    answerService.updateAnswer({id: targetId, answer: e.target.value})
     const newSlides = [...slides]
     if (newSlides && newSlides[selected]) {
       newSlides[selected].options[idx].value = e.target.value
@@ -31,9 +45,14 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
 
     setSlides(newSlides)
   }
+
+  const debouncedOptionValueChanged = useCallback(debounce(onOptionValueChanged, 500), [])
+
+
   const handleMenu = () => {}
 
-  const removeOption = (targetIdx) => {
+  const removeOption = (targetIdx, targetId) => {
+    answerService.deleteAnswer({id: targetId})
     const newSlides = [...slides]
     if (newSlides && newSlides[selected]) {
       newSlides[selected].options = options.filter(
@@ -44,16 +63,20 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
   }
 
   const addNewOption = () => {
-    const newSlides = [...slides]
-    newSlides[selected].options = [
-      ...options,
-      {
-        placeholder: `Option ${options.length + 1}`,
-        value: '',
-        checked: false,
-      },
-    ]
-    setSlides(newSlides)
+    answerService.createAnswer(slides[selected].id, { answer: '' })
+    .then(res => {
+      const answer = res.data
+      const newSlides = [...slides]
+      newSlides[selected].options = [
+        ...options,
+        {
+          ...answer,
+          value: answer.answer,
+          checked: false,
+        },
+      ]
+      setSlides(newSlides)
+    })
   }
   const optionsMapped = () => {
     return options?.map((option) => option.value)
@@ -66,6 +89,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
     const newSlide = [...slides]
     newSlide[selected].options[idx].checked = e.target.checked
     setSlides(newSlide)
+    onCheckBox();
   }
   useEffect(() => {
     form.resetFields()
@@ -176,12 +200,12 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay }) => {
                   ></input>
                   <input
                     placeholder={option.value === '' ? option.placeholder : ''}
-                    onChange={(e) => onOptionValueChanged(e, idx)}
-                    value={option.value}
+                    onChange={(e) => onOptionValueChanged(e, idx, option.id)}
+                    value={option?.value}
                     className="option-input"
                   />
                   <button
-                    onClick={() => removeOption(idx)}
+                    onClick={() => removeOption(idx, option.id)}
                     style={{ margin: '0 0 0 5px' }}
                   >
                     <DeleteOutlined></DeleteOutlined>

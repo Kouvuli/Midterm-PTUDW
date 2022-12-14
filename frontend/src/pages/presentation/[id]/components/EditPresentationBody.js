@@ -116,15 +116,35 @@ const EditPresentationBody = () => {
           {
             id: res.data.id,
             question: res.data.question,
-            options: [
-              { value: '', answer: '', checked: false },
-              { value: '', answer: '', checked: false },
-              { value: '', answer: '', checked: false },
-            ],
+            options: [],
           },
         ]
       })
     })
+  }
+
+  const handleRemoveSlide = () => {
+    questionService.deleteQuestion({ id: questionId })
+    .then(res => {
+      const newSlides = slides.filter(slide => slide.id !== questionId)
+      setSlides(newSlides)
+    })
+  }
+
+  const handleCheckBox = () => {
+    if (!selectedSlide) {
+      return;
+    }
+    const question = selectedSlide
+    const answer = question.options
+        .reduce((ans, option) => {
+        if (option.checked) {
+          ans = [...ans, option.id]
+        }
+        return ans
+      }, [])
+        .join(' ')
+      questionService.updateQuestion({ id: question.id, question: question.question, answer: answer })
   }
   
 
@@ -137,6 +157,7 @@ const EditPresentationBody = () => {
         setSlides={setSlides}
         selected={selected}
         onAddSlide={handleAddNewSlide}
+        onRemoveSlide={handleRemoveSlide}
       ></UtilsBar>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <LeftSidebar
@@ -157,6 +178,7 @@ const EditPresentationBody = () => {
           setSlides={setSlides}
           display={display}
           setDisplay={setDisplay}
+          onCheckBox = {handleCheckBox}
         ></RightSidebar>
       </div>
     </div>
