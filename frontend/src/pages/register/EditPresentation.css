@@ -1,0 +1,132 @@
+.small-slide {
+  display: flex;
+  margin: 15px 0 15px 0;
+  width: 100%;
+  transition: 0.3;
+  justify-content: center;
+}
+.small-slide-selected {
+  background-color: rgba(25, 108, 255, 0.2);
+}
+.small-slide:hover {
+  filter: brightness(150%);
+}
+.small-slide-selected:hover {
+  filter: brightness(60%);
+  background-color: rgba(25, 108, 255, 0.2);
+}
+.left-sidebar {
+  background: white;
+  overflow-y: scroll;
+  height: calc(100vh - 70px);
+  align-content: center;
+  border: 1px solid grey;
+  width: 240px;
+}
+
+.right-sidebar {
+  background: white;
+  overflow-y: scroll;
+  height: calc(100vh - 70px);
+  width: 400px;
+  border: 1px solid grey;
+  position: absolute;
+  right: 0;
+}
+
+.right-side-sub-top-bar {
+  display: none;
+  width: 100%;
+  margin: 5px;
+}
+.done-btn {
+  position: absolute;
+  right: 0;
+  margin: '0 5px 0 0';
+}
+.add-option-btn {
+  width: 86.5%;
+  margin: 0 0 0 18px;
+  background-color: rgb(219, 220, 225);
+}
+.center-content-display {
+}
+.option-input {
+  font-size: 16px;
+  border-width: 1px;
+  border-color: #d9d9d9;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: all 0.2s;
+  width: 90%;
+  padding: 0 10px 0 10px;
+}
+.option-input:focus {
+  border-color: rgba(25, 108, 255, 0.2);
+}
+.utils-bar {
+  display: flex;
+  padding: 5px;
+}
+.utils-btn {
+  margin: 5px;
+}
+.utils-btn-slide {
+  margin-left: 20px;
+}
+.sub-utils-bar {
+  position: absolute;
+  bottom: 0;
+  display: none;
+}
+.btn-container-util {
+  position: absolute;
+  right: 10px;
+}
+@media (max-width: 960px) {
+  .right-sidebar {
+    width: 100%;
+  }
+  .left-sidebar {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+  }
+  .right-side-sub-top-bar {
+    display: flex;
+  }
+  .add-option-btn {
+    width: 96%;
+  }
+  .center-content-display {
+    display: none;
+  }
+  .utils-bar {
+    display: none;
+  }
+  .sub-utils-bar {
+    background-color: white;
+    display: flex;
+    border: solid 1px black;
+    width: 100%;
+  }
+  .sub-utils-btn {
+    margin: 5px 0 0 0;
+  }
+}
+
+@media (max-width: 370px) {
+  .btn-container-util {
+    position: relative;
+    padding: 0;
+    margin: 0;
+  }
+  .sub-utils-btn {
+    margin: 5;
+  }
+  .utils-btn {
+    width: 100px;
+  }
+}

@@ -4,27 +4,27 @@ import { connect, Link } from 'umi'
 import { Button, Row, Input, Form } from 'antd'
 import { GlobalFooter } from 'components'
 import { GithubOutlined } from '@ant-design/icons'
-import { t, Trans } from "@lingui/macro"
+import { t, Trans } from '@lingui/macro'
 import { setLocale } from 'utils'
 import config from 'utils/config'
 
 import styles from './index.less'
-
+import PresentationTeacherView from './PresentationTeacherView'
+import PresentationStudentView from './PresentationStudentView'
 const FormItem = Form.Item
 
 @connect(({ loading, dispatch }) => ({ loading, dispatch }))
 class Login extends PureComponent {
-
   render() {
     const { dispatch, loading, location } = this.props
 
     const { query } = location
     const { success } = query
-    
-    const handleOk = values => {
+
+    const handleOk = (values) => {
       dispatch({ type: 'login/login', payload: values })
     }
-    const handleFailed = errorInfo => {
+    const handleFailed = (errorInfo) => {
       console.log(errorInfo)
     }
 
@@ -39,7 +39,7 @@ class Login extends PureComponent {
 
     if (config.i18n) {
       footerLinks = footerLinks.concat(
-        config.i18n.languages.map(item => ({
+        config.i18n.languages.map((item) => ({
           key: item.key,
           title: (
             <span onClick={setLocale.bind(null, item.key)}>{item.title}</span>
@@ -50,7 +50,7 @@ class Login extends PureComponent {
 
     return (
       <Fragment>
-        <div className={styles.form}>
+        {/* <div className={styles.form}>
           <div className={styles.logo}>
             <img alt="logo" src={config.logoPath} />
             <span>{config.siteName}</span>
@@ -89,7 +89,9 @@ class Login extends PureComponent {
         </div>
         <div className={styles.footer}>
           <GlobalFooter links={footerLinks} copyright={config.copyright} />
-        </div>
+        </div> */}
+        <PresentationStudentView></PresentationStudentView>
+        {/* <PresentationTeacherView></PresentationTeacherView> */}
       </Fragment>
     )
   }
