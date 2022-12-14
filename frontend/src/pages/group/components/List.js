@@ -76,9 +76,10 @@ class List extends PureComponent {
     return (
       <Table
         {...tableProps}
+        loading={false}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => t`Total ${total} Items`,
+          
         }}
         className={styles.table}
         bordered

@@ -33,18 +33,12 @@ export default {
 
   effects: {
     *query({ payload }, { call, put }) {
-      const data = yield call(queryGroup, payload)
-      const { success, message, status, statusCode, ...other } = data
-      if (success) {
-        yield put({
-          type: 'querySuccess',
-          payload: {
-            data: other,
-          },
-        })
-      } else {
-        throw data
-      }
+      yield put({
+        type: 'querySuccess',
+        payload: {
+          data: {},
+        },
+      })
     },
     *queryUserList({ payload = {} }, { call, put }) {
       const data = yield call(queryUserList, payload)
