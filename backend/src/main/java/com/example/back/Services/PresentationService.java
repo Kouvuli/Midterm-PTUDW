@@ -24,7 +24,9 @@ public class PresentationService {
     public Optional<Presentation> getPresentationById(Long id){
         return presentationRepository.findById(id);
     }
-
+    public Optional<Presentation> getPresentationByAccessCode(String accessCode){
+            return presentationRepository.findPresentationByAccessCode(accessCode);
+    }
     public Optional<Presentation> getPresentationByTitle(String title){
         return presentationRepository.findByTitle(title);
     }

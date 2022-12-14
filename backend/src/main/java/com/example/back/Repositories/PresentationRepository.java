@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface PresentationRepository extends JpaRepository<Presentation,Long> {
 
     Optional<Presentation> findByTitle(String title);
+    Optional<Presentation> findPresentationByAccessCode(String accessCode);
 }

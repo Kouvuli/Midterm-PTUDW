@@ -1,6 +1,9 @@
 package com.example.back.Controllers;
 
 
+import com.example.back.Constants.Constants;
+import com.example.back.Entities.Group;
+import com.example.back.Entities.InvitationToken;
 import com.example.back.Entities.Presentation;
 import com.example.back.Entities.User;
 import com.example.back.Payloads.request.Pagination;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @CrossOrigin(origins="*",maxAge = 3600)
@@ -63,7 +67,23 @@ public class PresentationController {
                         new ResponeObject("failed","Cannot find presentation with id="+id,"")
                 );
     }
+    @GetMapping("/{id}/invitationLink")
+    ResponseEntity<ResponeObject> getPresentationInvitationLink(@PathVariable Long id){
+        Optional<Presentation> presentation= presentationService.getPresentationById(id);
 
+        if (!presentation.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponeObject("failed","Cannot find presentation","")
+            );
+        }
+        String accessCode=presentation.get().getAccessCode();
+
+        String link = Constants.BACK_BASE_URL+ "/invitations/presentation/" + accessCode;
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponeObject("ok","Get presentation invitation link succesfully",link)
+        );
+
+    }
     @PostMapping("")
     ResponseEntity<ResponeObject> insertPresentation(@RequestBody Presentation newPresentation){
         Optional<Presentation> presentation=presentationService.getPresentationByTitle(newPresentation.getTitle());

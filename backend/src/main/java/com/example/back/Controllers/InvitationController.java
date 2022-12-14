@@ -1,17 +1,17 @@
 package com.example.back.Controllers;
 
-import com.example.back.Entities.ConfirmationToken;
 import com.example.back.Entities.InvitationToken;
+import com.example.back.Entities.Presentation;
 import com.example.back.Payloads.response.ResponeObject;
-import com.example.back.Services.EmailService;
 import com.example.back.Services.InvitationTokenService;
+import com.example.back.Services.PresentationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+
 @CrossOrigin(origins="*",maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/invitations")
@@ -21,7 +21,7 @@ public class InvitationController {
     private InvitationTokenService invitationTokenService;
 
     @Autowired
-    private EmailService emailService;
+    private PresentationService presentationService;
 
     @GetMapping("/group/{token}")
     ResponseEntity<ResponeObject> getGroupByInvitation(@PathVariable String token){
@@ -49,6 +49,20 @@ public class InvitationController {
         return  ResponseEntity.status(HttpStatus.OK).body(
                         new ResponeObject("ok","Get invitation succesfully",invitationToken.getGroup())
                 );
+
+    }
+
+    @GetMapping("/presentation/{accessCode}")
+    ResponseEntity<ResponeObject> getPresentationByInvitation(@PathVariable String accessCode){
+        Presentation presentation = presentationService
+                .getPresentationByAccessCode(accessCode)
+                .orElseThrow(() ->
+                        new IllegalStateException("access code not found"));
+
+
+        return  ResponseEntity.status(HttpStatus.OK).body(
+                new ResponeObject("ok","Get invitation succesfully",presentation)
+        );
 
     }
 }
