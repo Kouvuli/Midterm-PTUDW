@@ -18,7 +18,7 @@
 .left-sidebar {
   background: white;
   overflow-y: scroll;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 140px);
   align-content: center;
   border: 1px solid grey;
   width: 240px;
@@ -27,8 +27,8 @@
 .right-sidebar {
   background: white;
   overflow-y: scroll;
-  height: calc(100vh - 70px);
-  width: 400px;
+  height: calc(100vh - 140px);
+  width: 420px;
   border: 1px solid grey;
   position: absolute;
   right: 0;
@@ -92,7 +92,6 @@
     position: absolute;
     left: 0;
     z-index: 100;
-    padding: 0;
   }
   .right-side-sub-top-bar {
     display: flex;
