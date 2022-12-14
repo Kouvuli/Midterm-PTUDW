@@ -31,19 +31,20 @@ class List extends PureComponent {
 
     const columns = [
       {
-        title: <Trans>Image</Trans>,
-        dataIndex: 'image',
-        key: 'image',
-        width: '7%',
+        title: <Trans>Title</Trans>,
+        dataIndex: 'title',
+        key: 'title',
         fixed: 'left',
-        render: (text) => <Avatar style={{ marginLeft: 8 }} src={text} />,
+        render: (text, record) => (
+          <Link to={`/presentation/${record.id}`}>{text}</Link>
+        ),
       },
       {
-        title: <Trans>Name</Trans>,
-        dataIndex: 'name',
-        key: 'name',
+        title: <Trans>Access Code</Trans>,
+        dataIndex: 'access_code',
+        key: 'access_code',
         render: (text, record) => (
-          <Link to={`/group/${record.id}`}>{text}</Link>
+          <p>{text}</p>
         ),
       },
       {

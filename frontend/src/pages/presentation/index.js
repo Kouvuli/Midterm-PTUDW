@@ -10,25 +10,26 @@ import List from './components/List'
 import Filter from './components/Filter'
 import Modal from './components/Modal'
 import groupService from '../../services/group'
+import presentationService from '../../services/presentation'
 import store from 'store'
 
-@connect(({ group, loading }) => ({ group, loading }))
-class Group extends PureComponent {
+@connect(({ presentation, loading }) => ({ presentation, loading }))
+class Presentation extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      groups: [],
+      presentations: [],
     }
   }
 
   componentDidMount() {
     const auth = store.get('auth')
     const { id } = auth
-    groupService
-      .getOwnedGroupByUserId(id)
+    presentationService
+      .getPresentationList()
       .then((res) => {
         console.log(res.data)
-        this.setState({ groups: res.data })
+        this.setState({ presentations: res.data })
       })
       .catch((e) => console.log(e))
   }
@@ -50,11 +51,11 @@ class Group extends PureComponent {
   }
 
   handleDeleteItems = () => {
-    const { dispatch, group } = this.props
-    const { list, pagination, selectedRowKeys } = group
+    const { dispatch, presentation } = this.props
+    const { list, pagination, selectedRowKeys } = presentation
 
     dispatch({
-      type: 'group/multiDelete',
+      type: 'presentation/multiDelete',
       payload: {
         ids: selectedRowKeys,
       },
@@ -69,16 +70,16 @@ class Group extends PureComponent {
   }
 
   get modalProps() {
-    const { dispatch, group, loading } = this.props
-    const { currentItem, modalOpen, modalType } = group
-    const handleUpdateGroups = (newGroup) => {
-      let existedGroupIndex = this.state.groups.findIndex(group => group.id === newGroup.id)
-      if (existedGroupIndex > -1) {
-        let updateGroups = [...this.state.groups]
-        updateGroups[existedGroupIndex] = newGroup
-        this.setState({ groups: updateGroups })
+    const { dispatch, presentation, loading } = this.props
+    const { currentItem, modalOpen, modalType } = presentation
+    const handleUpdatePresentations = (newPresentation) => {
+      let existedPresentationIndex = this.state.presentations.findIndex(presentation => presentation.id === newPresentation.id)
+      if (existedPresentationIndex > -1) {
+        let updateGroups = [...this.state.presentations]
+        updateGroups[existedPresentationIndex] = newPresentation
+        this.setState({ presentations: updateGroups })
       } else {
-        this.setState({ groups: [...this.state.groups, newGroup] })
+        this.setState({ presentations: [...this.state.presentations, newPresentation] })
       }
     }
     return {
@@ -87,12 +88,12 @@ class Group extends PureComponent {
       open: modalOpen,
       destroyOnClose: true,
       maskClosable: false,
-      confirmLoading: loading.effects[`group/${modalType}`],
-      title: `${modalType === 'create' ? t`Create Group` : t`Update Group`}`,
+      confirmLoading: loading.effects[`presentation/${modalType}`],
+      title: `${modalType === 'create' ? t`Create Presentation` : t`Update Presentation`}`,
       centered: true,
       onOk: (data) => {
         dispatch({
-          type: `group/${modalType}`,
+          type: `presentation/${modalType}`,
           payload: data,
         }).then(() => {
           this.handleRefresh()
@@ -100,28 +101,28 @@ class Group extends PureComponent {
       },
       onCancel() {
         dispatch({
-          type: 'group/hideModal',
+          type: 'presentation/hideModal',
         })
       },
       onSuccessUpdate(newGroup) {
-        handleUpdateGroups(newGroup)
+        handleUpdatePresentations(newGroup)
         dispatch({
-          type: 'group/hideModal',
+          type: 'presentation/hideModal',
         })
       },
     }
   }
 
   get listProps() {
-    const { dispatch, group, loading } = this.props
-    const { list, pagination, selectedRowKeys } = group
+    const { dispatch, presentation, loading } = this.props
+    const { list, pagination, selectedRowKeys } = presentation
 
-    const filteredGroups = this.state.groups.filter((group) => !group.lock)
+    const filteredGroups = this.state.presentations.filter((presentation) => !presentation.lock)
 
     return {
       // loading :
       dataSource: filteredGroups,
-      loading: loading.effects['group/query'],
+      loading: loading.effects['presentation/query'],
       pagination,
       onChange: (page) => {
         this.handleRefresh({
@@ -131,7 +132,7 @@ class Group extends PureComponent {
       },
       onDeleteItem: (id) => {
         dispatch({
-          type: 'group/delete',
+          type: 'presentation/delete',
           payload: id,
         }).then(() => {
           this.handleRefresh({
@@ -144,7 +145,7 @@ class Group extends PureComponent {
       },
       onEditItem(item) {
         dispatch({
-          type: 'group/showModal',
+          type: 'presentation/showModal',
           payload: {
             modalType: 'update',
             currentItem: item,
@@ -155,7 +156,7 @@ class Group extends PureComponent {
         selectedRowKeys,
         onChange: (keys) => {
           dispatch({
-            type: 'group/updateState',
+            type: 'presentation/updateState',
             payload: {
               selectedRowKeys: keys,
             },
@@ -180,7 +181,7 @@ class Group extends PureComponent {
       },
       onAdd() {
         dispatch({
-          type: 'group/showModal',
+          type: 'presentation/showModal',
           payload: {
             modalType: 'create',
           },
@@ -190,8 +191,8 @@ class Group extends PureComponent {
   }
 
   render() {
-    const { group } = this.props
-    const { selectedRowKeys } = group
+    const { presentation } = this.props
+    const { selectedRowKeys } = presentation
 
     return (
       <Page inner>
@@ -219,11 +220,11 @@ class Group extends PureComponent {
   }
 }
 
-Group.propTypes = {
-  group: PropTypes.object,
+Presentation.propTypes = {
+  presentation: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.object,
 }
 
-export default Group
+export default Presentation

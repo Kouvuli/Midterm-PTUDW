@@ -5,7 +5,7 @@ import { Trans } from '@lingui/macro'
 import city from 'utils/city'
 import store from 'store'
 import { t } from '@lingui/macro'
-import groupService from '../../../services/group'
+import presentationService from '../../../services/presentation'
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -17,7 +17,7 @@ const formItemLayout = {
   },
 }
 
-class GroupModal extends PureComponent {
+class PresentationModal extends PureComponent {
   formRef = React.createRef()
 
   handleOk = () => {
@@ -35,20 +35,23 @@ class GroupModal extends PureComponent {
     //   .catch(errorInfo => {
     //     console.log(errorInfo)
     //   })
-    const groupName = this.formRef.current.getFieldValue('name')
+    const presentationTitle = this.formRef.current.getFieldValue('title')
+    const accessCode = this.formRef.current.getFieldValue('access_code')
     const auth = store.get('auth')
     const { id: userId } = auth
+    console.log(item)
+
     if (modalType === 'create') {
-      groupService
-        .createGroup(userId, { name: groupName })
+      presentationService
+        .createPresentation(userId, { title: presentationTitle, access_code: accessCode })
         .then((res) => {
           console.log(res)
           onSuccessUpdate(res.data)
         })
         .catch((error) => console.log(error))
     } else {
-      groupService
-        .updateGroup({ name: groupName, id: item.id })
+      presentationService
+        .updatePresentation({ title: presentationTitle, access_code: accessCode, id: item.id })
         .then((res) => {
           console.log(res)
           onSuccessUpdate(res.data)
@@ -58,7 +61,7 @@ class GroupModal extends PureComponent {
   }
 
   render() {
-    const { item = {}, onOk, form, ...modalProps } = this.props
+    const { item = {}, modalType, onOk, form, ...modalProps } = this.props
 
     return (
       <Modal {...modalProps} onOk={this.handleOk}>
@@ -72,24 +75,36 @@ class GroupModal extends PureComponent {
           layout="horizontal"
         >
           <FormItem
-            name="name"
+            name="title"
             rules={[{ required: true }]}
-            label={t`Name`}
+            label={t`Title`}
             hasFeedback
             {...formItemLayout}
           >
             <Input />
           </FormItem>
+          {modalType !== 'create' && (
+            <FormItem
+              name="access_code"
+              rules={[{ required: true }]}
+              label={t`Access Code`}
+              hasFeedback
+              {...formItemLayout}
+            >
+              <Input disabled />
+            </FormItem>
+          )}
+          
         </Form>
       </Modal>
     )
   }
 }
 
-GroupModal.propTypes = {
+PresentationModal.propTypes = {
   type: PropTypes.string,
   item: PropTypes.object,
   onOk: PropTypes.func,
 }
 
-export default GroupModal
+export default PresentationModal

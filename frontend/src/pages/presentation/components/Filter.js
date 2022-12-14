@@ -46,84 +46,6 @@ class Filter extends Component {
   componentWillUnmount() {
     clearTimeout(this.timer)
   }
-  handleInvitationLink = () => {
-    this.setState({ acceptInvitationloading: true })
-    const link = this.state.invitationLink
-    const auth = store.get('auth')
-    const { id: userId } = auth
-    invitationService
-      .getGroupInfoFromInvitation(link)
-      .then((res) => {
-        const group = res.data
-        console.log(group)
-        groupService
-          .getUserByGroupId(group.id)
-          .then((res) => {
-            console.log(res.data)
-            this.setState({ userInGroup: res.data })
-            const isUserInGroup = this.state.userInGroup.find(
-              (user) => user.user.id === userId
-            )
-
-            if (group.admin.id !== userId && isUserInGroup === undefined) {
-              userService
-                .addUserToGroup(userId, group.id)
-                .then((res) => {
-                  this.setState({
-                    alert: {
-                      message: `Accepted invitation to group ${group.name}`,
-                      type: 'success',
-                      acceptInvitationloading: false,
-                    },
-                  })
-                  this.timer = setTimeout(
-                    () => this.setState({ alert: { message: '', type: '' } }),
-                    1000
-                  )
-                })
-                .catch((error) => {
-                  this.setState({
-                    alert: {
-                      message: `Failed to accept invitation`,
-                      type: 'error',
-                      acceptInvitationloading: false,
-                    },
-                  })
-                  this.timer = setTimeout(
-                    () => this.setState({ alert: { message: '', type: '' } }),
-                    1000
-                  )
-                })
-            } else throw new Error('Already in the group')
-          })
-          .catch((error) => {
-            this.setState({
-              alert: {
-                message: `Failed to accept invitation`,
-                type: 'error',
-              },
-              acceptInvitationloading: false,
-            })
-            this.timer = setTimeout(
-              () => this.setState({ alert: { message: '', type: '' } }),
-              1000
-            )
-          })
-      })
-      .catch((error) => {
-        this.setState({
-          alert: {
-            message: `Failed to accept invitation`,
-            type: 'error',
-            acceptInvitationloading: false,
-          },
-        })
-        this.timer = setTimeout(
-          () => this.setState({ alert: { message: '', type: '' } }),
-          1000
-        )
-      })
-  }
   handleFields = (fields) => {
     const { createTime } = fields
     if (createTime && createTime.length) {
@@ -166,7 +88,7 @@ class Filter extends Component {
 
   render() {
     const { onAdd, filter } = this.props
-    const { name, address } = filter
+    const { title, address } = filter
 
     let initialCreateTime = []
     if (filter.createTime && filter.createTime[0]) {
@@ -178,42 +100,14 @@ class Filter extends Component {
 
     return (
       <>
-        <h3>Have an invitation link ?</h3>
-        <p
-          style={
-            !this.state.alert.message
-              ? { display: 'none' }
-              : this.state.alert.type === 'error'
-              ? { color: 'red' }
-              : { color: 'green' }
-          }
-        >
-          {this.state.alert.message}
-        </p>
-        <div style={{ display: 'flex', margin: '1em 0 1em 0' }}>
-          <Input
-            style={{ width: '350px' }}
-            name="invitationLink"
-            alt=""
-            value={this.state.invitationLink}
-            onChange={(e) => this.setState({ invitationLink: e.target.value })}
-          ></Input>
-          <Button
-            onClick={() => this.handleInvitationLink()}
-            style={{ marginLeft: '0.5em' }}
-            loading={this.state.acceptInvitationloading}
-          >
-            Accept invite
-          </Button>
-        </div>
         <Form
           ref={this.formRef}
           name="control-ref"
-          initialValues={{ name, address, createTime: initialCreateTime }}
+          initialValues={{ title, address, createTime: initialCreateTime }}
         >
           <Row gutter={24}>
             <Col {...ColProps} xl={{ span: 4 }} md={{ span: 8 }}>
-              <Form.Item name="name">
+              <Form.Item name="title">
                 <Search
                   placeholder={t`Search Name`}
                   onSearch={this.handleSubmit}
