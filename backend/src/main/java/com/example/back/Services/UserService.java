@@ -2,6 +2,7 @@ package com.example.back.Services;
 
 
 import com.example.back.Entities.Group;
+import com.example.back.Entities.Provider;
 import com.example.back.Entities.User;
 import com.example.back.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
@@ -40,5 +42,22 @@ public class UserService {
         User user=userRepository.findById(id).get();
         user.setLock(true);
         addUser(user);
+    }
+
+    public void processOAuthPostLogin(String id,String username,String fullname,String oauth2ClientName) {
+        Optional<User> existUser = userRepository.findByUsername(username);
+        Provider authType = Provider.valueOf(oauth2ClientName.toUpperCase());
+        if(!existUser.isPresent()){
+            User newUser = new User();
+            newUser.setUsername(username);
+            newUser.setCreateAt(new Timestamp(System.currentTimeMillis()));
+            newUser.setEnable(true);
+            newUser.setFullname(fullname);
+            newUser.setId(Long.valueOf(id));
+            newUser.setProvider(authType);
+            newUser.setEmail(username);
+            userRepository.save(newUser);
+        }
+
     }
 }

@@ -8,11 +8,13 @@ import com.example.back.Payloads.request.SignupRequest;
 import com.example.back.Payloads.response.JwtResponse;
 import com.example.back.Payloads.response.ResponeObject;
 import com.example.back.Security.jwt.JwtUtils;
+import com.example.back.Security.oauth.CustomOAuth2UserService;
 import com.example.back.Security.services.UserDetailsImpl;
 import com.example.back.Services.AuthService;
 import com.example.back.Services.ConfirmationTokenService;
 import com.example.back.Services.EmailService;
 import com.example.back.Services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +23,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @CrossOrigin(origins="*",maxAge = 3600)

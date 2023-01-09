@@ -53,6 +53,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     Set<ConfirmationToken> tokens=new HashSet<>();
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private Provider provider=Provider.DATABASE;
+
+
     public User() {
     }
 
@@ -66,6 +73,13 @@ public class User {
         this.isStudent=isStudent;
     }
 
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
     public String getUsername() {
         return username;
     }

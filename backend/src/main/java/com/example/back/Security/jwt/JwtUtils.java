@@ -1,12 +1,14 @@
 package com.example.back.Security.jwt;
 
 
+import com.example.back.Security.oauth.CustomOAuth2User;
 import com.example.back.Security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -29,6 +31,15 @@ public class JwtUtils {
         .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
         .compact();
   }
+  public String generateOAuthJwtToken(Authentication authentication) {
+
+    CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+
+    return Jwts.builder().setSubject((oauthUser.getEmail())).setIssuedAt(new Date())
+            .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
+  }
+
   public Date getExpirationDateFromJwtToken(String token) {
     return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getExpiration();
   }
