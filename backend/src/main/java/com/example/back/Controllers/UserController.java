@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -28,7 +29,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
+    @Autowired
+    PasswordEncoder encoder;
     @GetMapping("")
     ResponseEntity<ResponseObjectPagination> getAllUsers(
             @RequestParam(defaultValue = "1") int page,
@@ -104,7 +106,7 @@ public class UserController {
                     new ResponeObject("failed","User is locked!",user.get())
             );
         }
-        user.get().setPassword(newUser.getPassword());
+        user.get().setPassword(encoder.encode(newUser.getPassword()));
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponeObject("ok","Update password successfully",userService.addUser(user.get()))
         );
