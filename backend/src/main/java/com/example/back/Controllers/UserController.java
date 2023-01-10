@@ -89,6 +89,27 @@ public class UserController {
                 );
 
     }
+    @PutMapping("/changepassword/{id}")
+    ResponseEntity<ResponeObject> changePassword(@RequestBody User newUser, @PathVariable Long id){
+        Optional<User> user= userService.getUserById(id);
+        if(!user.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponeObject("failed","User not exists!","")
+            );
+        }
+
+
+        if(user.get().isLock()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(
+                    new ResponeObject("failed","User is locked!",user.get())
+            );
+        }
+        user.get().setPassword(newUser.getPassword());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponeObject("ok","Update password successfully",userService.addUser(user.get()))
+        );
+    }
+
     @PutMapping("/{id}")
     ResponseEntity<ResponeObject> updateUser(@RequestBody User newUser, @PathVariable Long id){
         Optional<User> user= userService.getUserById(id);
