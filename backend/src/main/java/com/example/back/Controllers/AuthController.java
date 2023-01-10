@@ -3,6 +3,7 @@ package com.example.back.Controllers;
 import com.example.back.Constants.Constants;
 import com.example.back.Entities.ConfirmationToken;
 import com.example.back.Entities.User;
+import com.example.back.Payloads.request.ForgotPasswordRequest;
 import com.example.back.Payloads.request.LoginRequest;
 import com.example.back.Payloads.request.SignupRequest;
 import com.example.back.Payloads.response.JwtResponse;
@@ -26,11 +27,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin(origins="*",maxAge = 3600)
@@ -86,7 +89,11 @@ public class AuthController {
                     .badRequest()
                     .body(new ResponeObject("failed","Error: Username is already taken!",""));
         }
-
+        if (userService.existByEmail(signUpRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ResponeObject("failed","Error: Email is already taken!",""));
+        }
 
         // Create new user's account
         User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()),signUpRequest.getFullname(),signUpRequest.getBirthday(),new Timestamp(System.currentTimeMillis()), signUpRequest.isStudent());
@@ -143,6 +150,43 @@ public class AuthController {
         return ResponseEntity.ok(new ResponeObject("ok","User registered successfully!",""));
     }
 
+    @PostMapping("/forgotpassword")
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        Optional<User> user=userService.getUserByEmail(request.getEmail());
+
+        if (!user.isPresent()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ResponeObject("failed","Error: Wrong email!!",""));
+        }
+        String token = UUID.randomUUID().toString();
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                user.get()
+        );
+
+        confirmationTokenService.saveConfirmationToken(
+                confirmationToken);
+
+        String link = Constants.BACK_BASE_URL+"/auth/forgotpassword/confirm?token=" + token;
+//        System.out.println(link);
+        emailService.send(
+                request.getEmail(),
+                emailService.buildVerificationBody(user.get().getFullname(), link),"Forgot password - Verify your email");
+        return ResponseEntity.ok(new ResponeObject("ok","Send reset password email successfully!",token));
+    }
+
+    @GetMapping("/confirm/check")
+    public String checkConfirmation(@RequestParam("token") String token) {
+        return authService.checkConfirmation(token);
+    }
+    @GetMapping("/forgotpassword/confirm")
+    public String forgotPasswordConfirm(@RequestParam("token") String token) {
+        return authService.confirmToken(token);
+    }
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token) {
         return authService.confirmToken(token);

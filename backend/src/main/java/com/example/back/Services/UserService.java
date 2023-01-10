@@ -24,6 +24,13 @@ public class UserService {
     public boolean existByUsername(String username){
         return userRepository.existsByUsername(username);
     }
+    public boolean existByEmail(String email){
+        return userRepository.existsByEmail(email);
+    }
+
+    public Optional<User> getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
     public Optional<User> getUserById(Long id){
         return userRepository.findById(id);
     }
