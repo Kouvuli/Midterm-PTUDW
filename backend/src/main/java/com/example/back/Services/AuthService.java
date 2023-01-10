@@ -1,8 +1,11 @@
 package com.example.back.Services;
 
 import com.example.back.Entities.ConfirmationToken;
+import com.example.back.Payloads.response.ResponeObject;
 import com.example.back.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,24 +21,33 @@ public class AuthService {
     @Autowired
     private  ConfirmationTokenService confirmationTokenService;
 
-    public String checkConfirmation(String token){
+    public ResponseEntity<?> checkConfirmation(String token){
         Optional<ConfirmationToken> confirmationToken = confirmationTokenService.getToken(token);
         if (!confirmationToken.isPresent()){
-            return "token not found";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponeObject("failed","Token not found","")
+            );
         }
 
 
         if (confirmationToken.get().getConfirmedAt() != null) {
-            return "email already confirmed";
+            return ResponseEntity.ok().body(
+                    new ResponeObject("ok","Email already confirmed",confirmationToken.get().getUser())
+            );
+
         }
 
         LocalDateTime expiredAt = confirmationToken.get().getExpiredAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            return "token expired";
+            return ResponseEntity.badRequest().body(
+                    new ResponeObject("failed","Token expired","")
+            );
         }
 
-        return "token haven't confirmed";
+        return ResponseEntity.badRequest().body(
+                new ResponeObject("failed","Email haven't confirmed","")
+        );
 
     }
 

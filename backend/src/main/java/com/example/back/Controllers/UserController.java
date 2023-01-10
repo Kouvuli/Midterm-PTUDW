@@ -4,6 +4,7 @@ package com.example.back.Controllers;
 import com.example.back.Entities.Group;
 import com.example.back.Entities.User;
 import com.example.back.Entities.UserGroup;
+import com.example.back.Payloads.request.ChangePasswordRequest;
 import com.example.back.Payloads.request.Pagination;
 import com.example.back.Payloads.response.JoinedGroupResponse;
 import com.example.back.Payloads.response.ResponeObject;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -92,7 +94,7 @@ public class UserController {
 
     }
     @PutMapping("/changepassword/{id}")
-    ResponseEntity<ResponeObject> changePassword(@RequestBody User newUser, @PathVariable Long id){
+    ResponseEntity<ResponeObject> changePassword(@Valid @RequestBody ChangePasswordRequest request, @PathVariable Long id){
         Optional<User> user= userService.getUserById(id);
         if(!user.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -106,7 +108,7 @@ public class UserController {
                     new ResponeObject("failed","User is locked!",user.get())
             );
         }
-        user.get().setPassword(encoder.encode(newUser.getPassword()));
+        user.get().setPassword(encoder.encode(request.getPassword()));
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponeObject("ok","Update password successfully",userService.addUser(user.get()))
         );

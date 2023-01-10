@@ -180,7 +180,7 @@ public class AuthController {
     }
 
     @GetMapping("/confirm/check")
-    public String checkConfirmation(@RequestParam("token") String token) {
+    public ResponseEntity<?> checkConfirmation(@RequestParam("token") String token) {
         return authService.checkConfirmation(token);
     }
     @GetMapping("/forgotpassword/confirm")
