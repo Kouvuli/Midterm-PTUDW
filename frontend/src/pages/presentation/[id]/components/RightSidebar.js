@@ -27,8 +27,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
     options = slides[selected].options
   }
 
-  const updateQuestion = (newValue) => {
-    questionService.updateQuestion({id: slides[selected]?.id, question: newValue})
+  const onQuestionChanged = (newValue) => {
     const newSlides = [...slides]
     if (newSlides && newSlides[selected]) {
       newSlides[selected].question = newValue
@@ -36,14 +35,21 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
     setSlides(newSlides)
   }
 
+  const onQuestionBlur = (newValue) => {
+    questionService.updateQuestion({id: slides[selected]?.id, question: newValue})
+  }
+
   const onOptionValueChanged = (e, idx, targetId) => {
-    answerService.updateAnswer({id: targetId, answer: e.target.value})
     const newSlides = [...slides]
     if (newSlides && newSlides[selected]) {
       newSlides[selected].options[idx].value = e.target.value
     }
 
     setSlides(newSlides)
+  }
+
+  const onOptionValueBlur = (e, idx, targetId) => {
+    answerService.updateAnswer({id: targetId, answer: e.target.value})
   }
 
   const debouncedOptionValueChanged = useCallback(debounce(onOptionValueChanged, 500), [])
@@ -168,7 +174,8 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
           <Input
             style={{ fontSize: 16 }}
             placeholder="Your question"
-            onChange={(e) => updateQuestion(e.target.value)}
+            onChange={(e) => onQuestionChanged(e.target.value)}
+            onBlur={(e) => onQuestionBlur(e.target.value)}
           />
         </Form.Item>
 
@@ -201,6 +208,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
                   <input
                     placeholder={option.value === '' ? option.placeholder : ''}
                     onChange={(e) => onOptionValueChanged(e, idx, option.id)}
+                    onBlur={(e) => onOptionValueBlur(e, idx, option.id)}
                     value={option?.value}
                     className="option-input"
                   />
