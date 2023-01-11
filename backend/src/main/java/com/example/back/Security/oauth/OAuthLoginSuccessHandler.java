@@ -1,5 +1,6 @@
 package com.example.back.Security.oauth;
 
+import com.example.back.Constants.Constants;
 import com.example.back.Entities.User;
 import com.example.back.Payloads.response.JwtResponse;
 import com.example.back.Payloads.response.ResponeObject;
@@ -32,21 +33,26 @@ public class OAuthLoginSuccessHandler extends SavedRequestAwareAuthenticationSuc
                                         Authentication authentication) throws ServletException, IOException {
         CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
         String oauth2ClientName = oauthUser.getOauth2ClientName();
-
-        userService.processOAuthPostLogin(oauthUser.getId(),oauthUser.getEmail(),oauthUser.getName(),oauth2ClientName);
+//        String id=null;
+//        if (oauth2ClientName.equals("Google")) {
+//            id="10";
+//        }else{
+//            id=oauthUser.getId();
+//        }
+        userService.processOAuthPostLogin(oauthUser.getEmail(),oauthUser.getName(),oauth2ClientName);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateOAuthJwtToken(authentication);
         User user=userService.getUserByUsername(oauthUser.getEmail()).get();
         Gson gson = new Gson();
         String employeeJsonString = gson.toJson(new ResponeObject("ok","successfully get user",new JwtResponse(jwtUtils.getExpirationDateFromJwtToken(jwt),jwt,
-                Long.valueOf(oauthUser.getId()),
+                user.getId(),
                 oauthUser.getEmail())));
         if(user.isEnable()&&!user.isLock()){
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write(employeeJsonString);
             response.getWriter().flush();
         }
-//        response.sendRedirect("localhost");
+//        response.sendRedirect(Constants.FRONT_BASE_URL+"/dashboard");
 //        super.onAuthenticationSuccess(request, response, authentication);
     }
 

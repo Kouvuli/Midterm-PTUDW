@@ -39,6 +39,8 @@ public class CustomOAuth2User implements OAuth2User {
         return oauth2User.<String>getAttribute("id");
     }
 
+    public String getSub(){return oauth2User.<String>getAttribute("sub");}
+
     public String getOauth2ClientName() {
         return this.oauth2ClientName;
     }

@@ -71,6 +71,7 @@ public class QuestionController {
         Question updatedQuestion= questionService.getQuestionById(id)
                 .map(question->{
                     question.setQuestion(newQuestion.getQuestion());
+                    question.setType(newQuestion.getType());
                     question.setAnswer(newQuestion.getAnswer());
                     return questionService.addQuestion(question);
                 }).orElseGet(()->{

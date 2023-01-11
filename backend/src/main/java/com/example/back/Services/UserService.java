@@ -51,7 +51,7 @@ public class UserService {
         addUser(user);
     }
 
-    public void processOAuthPostLogin(String id,String username,String fullname,String oauth2ClientName) {
+    public void processOAuthPostLogin(String username,String fullname,String oauth2ClientName) {
         Optional<User> existUser = userRepository.findByUsername(username);
         Provider authType = Provider.valueOf(oauth2ClientName.toUpperCase());
         if(!existUser.isPresent()){
@@ -60,7 +60,7 @@ public class UserService {
             newUser.setCreateAt(new Timestamp(System.currentTimeMillis()));
             newUser.setEnable(true);
             newUser.setFullname(fullname);
-            newUser.setId(Long.valueOf(id));
+
             newUser.setProvider(authType);
             newUser.setEmail(username);
             userRepository.save(newUser);
