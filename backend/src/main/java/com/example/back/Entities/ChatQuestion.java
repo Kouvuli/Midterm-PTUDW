@@ -23,12 +23,24 @@ public class ChatQuestion {
     @JsonIgnore
     private Set<ChatAnswer> answers =new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "presentation_id", referencedColumnName = "id")
+    private Presentation presentation;
+
     private String author;
     private Long vote;
 
     private boolean answered=false;
 
     public ChatQuestion() {
+    }
+
+    public Presentation getPresentation() {
+        return presentation;
+    }
+
+    public void setPresentation(Presentation presentation) {
+        this.presentation = presentation;
     }
 
     public String getAuthor() {

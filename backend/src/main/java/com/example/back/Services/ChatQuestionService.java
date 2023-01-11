@@ -17,9 +17,9 @@ public class ChatQuestionService {
     private ChatQuestionRepository chatQuestionRepository;
 
 
-    public Page<ChatQuestion> getQuestion(Pageable pageable){
+    public Page<ChatQuestion> getQuestionByPresentationId(Pageable pageable,Long id){
 
-        return chatQuestionRepository.findAll(pageable);
+        return chatQuestionRepository.findAllByPresentationId(pageable,id);
     }
 
     public Optional<ChatQuestion> getQuestionById(Long id){

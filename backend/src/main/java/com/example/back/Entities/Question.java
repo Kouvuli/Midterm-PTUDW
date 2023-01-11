@@ -21,7 +21,7 @@ public class Question implements Comparable<Question>{
 
     private String answer;
 
-
+    private String type;
 
     @ManyToOne
     @JoinColumn(name = "presentation_id", referencedColumnName = "id")
@@ -35,6 +35,14 @@ public class Question implements Comparable<Question>{
 
 
     public Question() {
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getAnswer() {

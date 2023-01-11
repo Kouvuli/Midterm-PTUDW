@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 @Table(name = "groups")
@@ -25,8 +26,9 @@ public class Group {
     private User admin;
 
 
-//    @ManyToMany(mappedBy = "userGroup")
-//    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "group")
+    @JsonIgnore
+    private Set<Presentation> presentations =new HashSet<>();
 
     @OneToMany(mappedBy = "group")
     @JsonIgnore
@@ -36,6 +38,14 @@ public class Group {
     @JsonIgnore
     Set<InvitationToken> tokens=new HashSet<>();
     public Group() {
+    }
+
+    public Set<Presentation> getPresentations() {
+        return presentations;
+    }
+
+    public void setPresentations(Set<Presentation> presentations) {
+        this.presentations = presentations;
     }
 
     public boolean isLock() {

@@ -7,6 +7,7 @@ import com.example.back.Payloads.request.Pagination;
 import com.example.back.Payloads.response.ResponeObject;
 import com.example.back.Payloads.response.ResponseObjectPagination;
 import com.example.back.Services.ChatQuestionService;
+import com.example.back.Services.PresentationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,18 +27,29 @@ public class ChatQuestionController {
     @Autowired
     private ChatQuestionService chatQuestionService;
 
-    @GetMapping("")
-    ResponseEntity<ResponseObjectPagination> getChatQuestions(
+    @Autowired
+    private PresentationService presentationService;
+
+    @GetMapping("/{id}")
+    ResponseEntity<ResponseObjectPagination> getChatQuestionsByPresentationId(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10")int limit,
             @RequestParam(name = "order_by",defaultValue = "") String orderBy,
-            @RequestParam(name="sort_by",defaultValue = "")String sortBy
+            @RequestParam(name="sort_by",defaultValue = "")String sortBy,
+            @PathVariable Long id
     ){
         if(page<0 || limit <1){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObjectPagination(null,"failed","Cannot find chat questions","")
             );
 
+        }
+        Optional<Presentation>presentation=presentationService.getPresentationById(id);
+
+        if(!presentation.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObjectPagination(null,"failed","Cannot find presentation","")
+            );
         }
         Pageable pageable=null;
         if(orderBy.isEmpty()&&sortBy.isEmpty()){
@@ -55,13 +67,13 @@ public class ChatQuestionController {
         }
 
 
-        Page<ChatQuestion> chatQuestions= chatQuestionService.getQuestion(pageable);
+        Page<ChatQuestion> chatQuestions= chatQuestionService.getQuestionByPresentationId(pageable,id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObjectPagination(new Pagination(chatQuestions.getTotalPages()-1,chatQuestions.hasNext(),page,limit),"ok","",chatQuestions.getContent())
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/answer/{id}")
     ResponseEntity<ResponeObject> getAnswersByQuestionId(@PathVariable Long id){
         Optional<ChatQuestion> chatQuestion=chatQuestionService.getQuestionById(id);
         if(!chatQuestion.isPresent()){

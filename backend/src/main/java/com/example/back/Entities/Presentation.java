@@ -31,11 +31,35 @@ public class Presentation {
     @JsonIgnore
     private Set<Question> questions =new TreeSet<>();
 
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    private Group group;
+
     @Column(name = "create_at")
     private Timestamp createAt;
 
+    @OneToMany(mappedBy = "presentation")
+    @JsonIgnore
+    private Set<ChatQuestion> chatQuestions =new HashSet<>();
 
     public Presentation() {
+    }
+
+    public Set<ChatQuestion> getChatQuestions() {
+        return chatQuestions;
+    }
+
+    public void setChatQuestions(Set<ChatQuestion> chatQuestions) {
+        this.chatQuestions = chatQuestions;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public Long getId() {
