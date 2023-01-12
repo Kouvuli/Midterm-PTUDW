@@ -84,6 +84,7 @@ export default {
       }
       const { locationPathname } = yield select(_ => _.app)
       const auth = store.get('auth')
+      const isOauth = window.location.pathname.includes("oauth2")
       if (auth && !isEmpty(auth)) {
         const { expired_date } = auth
         if (isExpired(expired_date)) {
@@ -231,7 +232,7 @@ export default {
         store.set('permissions', permissions)
         store.set('isInit', true)
         goDashboard()
-      } else if (queryLayout(config.layouts, locationPathname) !== 'public') {
+      } else if (queryLayout(config.layouts, locationPathname) !== 'public' && !isOauth) {
         history.push({
           pathname: '/login',
         }) 
