@@ -13,11 +13,41 @@ import PresentationTeacherView from './PresentationTeacherView'
 import PresentationStudentView from './PresentationStudentView'
 const FormItem = Form.Item
 
+import groupService from '../../services/group'
+import presentationService from '../../services/presentation'
+import store from 'store'
+
 @connect(({ loading, dispatch }) => ({ loading, dispatch }))
 class LivePresentation extends PureComponent {
   urlParams = new URLSearchParams(window.location.search)
   roomId = this.urlParams.get('id')
-  view = this.urlParams.get('view')
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      view: "",
+    }
+  }
+
+  componentDidMount() {
+    const auth = store.get('auth')
+    const { id } = auth
+
+    const initialLoad = async () => {
+      try {
+        const { data: present } = await presentationService.getPresentationById(this.roomId)
+        const { group } = present
+          const { data: members } = await groupService.getUserByGroupId(group.id)
+          const valid = members.find(member => member.id === id && (member.role.name === "OWNER" || member.role.name === "CO-OWNER"))
+          const view = valid ? "teacher" : "student"
+          this.setState({ view: view })
+      } catch(err) {
+        this.setState({ view: "404" })
+      }
+    }
+    initialLoad();
+  }
+
   render() {
     const { dispatch, loading, location } = this.props
     console.log(this.roomId)
@@ -46,52 +76,17 @@ class LivePresentation extends PureComponent {
 
     return (
       <Fragment>
-        {/* <div className={styles.form}>
-          <div className={styles.logo}>
-            <img alt="logo" src={config.logoPath} />
-            <span>{config.siteName}</span>
+        {this.state.view === '404' ? (
+          <div>
+            <h3>presentation not found or you are not authorized</h3>
           </div>
-          <Form
-            onFinish={handleOk}
-            onFinishFailed={handleFailed}
-            >
-            <FormItem name="username" 
-              rules={[{ required: true }]} hasFeedback>
-                <Input
-                  placeholder={t`Username`}
-                />
-            </FormItem>
-            <Trans id="Password" render={({translation}) => (
-              <FormItem name="password" rules={[{ required: true }]} hasFeedback>
-              <Input type='password' placeholder={translation} required />
-              </FormItem>)} 
-            />
-            <Row>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading.effects.login}
-              >
-                <Trans>Sign in</Trans>
-              </Button>
-              <p>
-                <span className="margin-right">
-                  Don't have an account? <Link to="/register">Register now</Link>
-                </span>
-              </p>
-              {success && <p className={styles.successMessage}>Signup Successfully</p>}
-            </Row>
-          </Form>
-        </div>
-        <div className={styles.footer}>
-          <GlobalFooter links={footerLinks} copyright={config.copyright} />
-        </div> */}
-        {this.view === 'teacher' ? (
+        ) : null}
+        {this.state.view === 'teacher' ? (
           <PresentationTeacherView
             roomId={this.roomId}
           ></PresentationTeacherView>
         ) : null}
-        {this.view !== 'teacher' ? (
+        {this.state.view === 'student' ? (
           <PresentationStudentView
             roomId={this.roomId}
           ></PresentationStudentView>

@@ -16,7 +16,7 @@ const StudentViewWait = ({ show, slides, current, selected }) => {
             alt=""
             style={{ width: '100%', margin: '20px 0 20px 0' }}
           ></img>
-          <h1>Question: {slides[current].question}</h1>
+          <h1>Question: {slides?.[current]?.question}</h1>
         </div>
         <div
           style={{
@@ -26,8 +26,7 @@ const StudentViewWait = ({ show, slides, current, selected }) => {
           }}
         >
           <h2>
-            Please wait for the result. You picked{' '}
-            {`${selected + 1}. ${slides[current].options[selected].value}`}
+            Please wait for the result.
           </h2>
         </div>
       </div>
