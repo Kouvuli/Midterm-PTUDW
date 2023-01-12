@@ -1,6 +1,6 @@
 import { Button } from 'antd'
-
-const UtilsBar = ({ type, onAddSlide, onRemoveSlide }) => {
+import { Link } from 'umi'
+const UtilsBar = ({ type, onAddSlide, onRemoveSlide, onPresentation }) => {
   return (
     <div>
       <div className={type === 'main' ? 'utils-bar' : 'sub-utils-bar'}>
@@ -17,6 +17,7 @@ const UtilsBar = ({ type, onAddSlide, onRemoveSlide }) => {
             type="primary"
             size="large"
             className={type === 'main' ? 'utils-btn' : 'sub-utils-btn'}
+            onClick={onPresentation}
           >
             Presentation
           </Button>
