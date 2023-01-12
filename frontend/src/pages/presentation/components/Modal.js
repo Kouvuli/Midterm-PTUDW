@@ -37,13 +37,14 @@ class PresentationModal extends PureComponent {
     //   })
     const presentationTitle = this.formRef.current.getFieldValue('title')
     const accessCode = this.formRef.current.getFieldValue('access_code')
+    const groupId = this.formRef.current.getFieldValue('group_id')
     const auth = store.get('auth')
     const { id: userId } = auth
     console.log(item)
 
     if (modalType === 'create') {
       presentationService
-        .createPresentation(userId, { title: presentationTitle, access_code: accessCode })
+        .createPresentation(userId, { title: presentationTitle, access_code: accessCode, group_id: groupId })
         .then((res) => {
           console.log(res)
           onSuccessUpdate(res.data)
@@ -82,6 +83,15 @@ class PresentationModal extends PureComponent {
             {...formItemLayout}
           >
             <Input />
+          </FormItem>
+          <FormItem
+            name="group_id"
+            rules={[{ required: true }]}
+            label={t`Group ID`}
+            hasFeedback
+            {...formItemLayout}
+          >
+            <Input disabled={modalType !== 'create'} />
           </FormItem>
           {modalType !== 'create' && (
             <FormItem
