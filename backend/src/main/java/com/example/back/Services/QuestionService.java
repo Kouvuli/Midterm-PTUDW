@@ -8,8 +8,10 @@ import com.example.back.Repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,9 +21,11 @@ public class QuestionService {
 
     @Autowired
     private AnswerService answerService;
-    public Page<Question> getQuestion(Pageable pageable){
-        return questionRepository.findAll(pageable);
+    public List<Question> getQuestionPresentationId(Long id){
+        return questionRepository.findQuestionByPresentationId(Sort.by("createAt"),id);
     }
+
+
 
     public Optional<Question> getQuestionById(Long id){
         return questionRepository.findById(id);
