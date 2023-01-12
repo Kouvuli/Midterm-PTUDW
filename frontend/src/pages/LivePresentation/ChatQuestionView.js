@@ -57,7 +57,7 @@ const renderQuestion = (data, role, updateStoreUpvote, updateSocket) => {
   )
 }
 
-const ChatQuestionView = ({ showChatQuestion, roomId, questions, role }) => {
+const ChatQuestionView = ({ showChatQuestion, roomId, questions, role, user }) => {
   const [inputValue, setInputValue] = useState('')
   const auth = store.get('auth')
   const { id, username } = auth

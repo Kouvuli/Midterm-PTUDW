@@ -17,6 +17,8 @@ import chatQuestionService from '../../services/chatQuestion'
 import questionService from '../../services/question'
 import answerService from '../../services/answer'
 
+import store from "store"
+
 const socket = io.connect('https://socket-io-server.onrender.com/')
 const Context = React.createContext({
   name: 'Default',
@@ -34,6 +36,8 @@ const PresentationTeacherView = ({ roomId }) => {
   const [showChatQuestion, setShowChatQuestion] = useState(false)
   const [chatMessages, setChatMessages] = useState([])
   const [chatQuestions, setChatQuestions] = useState([])
+
+  const auth = store.get('auth')
 
   const [api, contextHolder] = notification.useNotification()
   const openChatNotification = (placement, message) => {
@@ -262,12 +266,14 @@ const PresentationTeacherView = ({ roomId }) => {
         roomId={roomId}
         messages={chatMessages}
         role="teacher"
+        user={auth}
       />
       <ChatQuestionView
         showChatQuestion={showChatQuestion}
         roomId={roomId}
         questions={chatQuestions}
         role="teacher"
+        user={auth}
       />
     </Context.Provider>
   )

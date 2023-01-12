@@ -14,12 +14,12 @@ const renderMessage = ({ username, message }) => {
   )
 }
 
-const ChatView = ({ showChat, roomId, messages, role }) => {
+const ChatView = ({ showChat, roomId, messages, role, user }) => {
   const [inputValue, setInputValue] = useState('')
 
   const handleSendMessage = () => {
     socket.emit('send_message', {
-      data: { username: 'Tien', message: inputValue },
+      data: { username: user.username, message: inputValue },
       room: roomId,
       message: 'chat',
     })
