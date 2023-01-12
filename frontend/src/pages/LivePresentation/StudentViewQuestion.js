@@ -1,13 +1,17 @@
 import Fade from 'react-reveal/Fade'
-import { Button, Radio, Space } from 'antd'
+import { Button, Checkbox, Radio, Space } from 'antd'
 const StudentViewQuestion = ({
   show,
   slides,
   current,
   handleSelection,
-  selectedOption,
   handleSubmit,
 }) => {
+  const checkboxOptions = slides?.[current]?.options.map((option, idx) => ({
+    label: option.value,
+    value: option.id,
+  }))
+
   return (
     <Fade right opposite when={show}>
       <div style={{ width: '100%', marginBottom: '20px' }}>
@@ -23,7 +27,7 @@ const StudentViewQuestion = ({
             alt=""
             style={{ width: '100%', margin: '20px 0 20px 0' }}
           ></img>
-          <h1>Question: {slides[current].question}</h1>
+          <h1>Question: {slides?.[current]?.question}</h1>
         </div>
         <div
           style={{
@@ -32,19 +36,10 @@ const StudentViewQuestion = ({
             textAlign: 'left',
           }}
         >
-          <Radio.Group onChange={handleSelection} value={selectedOption}>
-            <Space direction="vertical">
-              {slides[current].options.map((option, idx) => (
-                <Radio
-                  value={idx}
-                  key={`option-${idx}`}
-                  style={{ fontSize: 24 }}
-                >
-                  {option.value}
-                </Radio>
-              ))}
-            </Space>
-          </Radio.Group>
+          <Checkbox.Group
+            options={checkboxOptions}
+            onChange={handleSelection}
+          />
         </div>
         <div style={{ margin: '0 auto', width: '50%' }}>
           <Button
