@@ -8,17 +8,24 @@ import {
 import answerService from '../../../../services/answer'
 import questionService from '../../../../services/question'
 
-const debounce = (func, timeout=1000) => {
-  let timeoutId;
+const debounce = (func, timeout = 1000) => {
+  let timeoutId
   return (...args) => {
-    clearTimeout(timeoutId);
+    clearTimeout(timeoutId)
     timeoutId = setTimeout(() => {
-      func(...args);
-    }, timeout);
-  };
-};
+      func(...args)
+    }, timeout)
+  }
+}
 
-const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onCheckBox }) => {
+const RightSidebar = ({
+  slides,
+  selected,
+  setSlides,
+  display,
+  setDisplay,
+  onCheckBox,
+}) => {
   const [form] = Form.useForm()
   let question
   let options
@@ -26,6 +33,12 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
     question = slides[selected].question
     options = slides[selected].options
   }
+
+  const selectedSlide = slides?.[selected] || {}
+
+  const { type } = selectedSlide
+
+  console.log('selectedSlide', selectedSlide)
 
   const onQuestionChanged = (newValue) => {
     const newSlides = [...slides]
@@ -36,7 +49,10 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
   }
 
   const onQuestionBlur = (newValue) => {
-    questionService.updateQuestion({id: slides[selected]?.id, question: newValue})
+    questionService.updateQuestion({
+      id: slides[selected]?.id,
+      question: newValue,
+    })
   }
 
   const onOptionValueChanged = (e, idx, targetId) => {
@@ -49,16 +65,28 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
   }
 
   const onOptionValueBlur = (e, idx, targetId) => {
-    answerService.updateAnswer({id: targetId, answer: e.target.value})
+    answerService.updateAnswer({ id: targetId, answer: e.target.value })
   }
 
-  const debouncedOptionValueChanged = useCallback(debounce(onOptionValueChanged, 500), [])
+  const debouncedOptionValueChanged = useCallback(
+    debounce(onOptionValueChanged, 500),
+    []
+  )
 
-
-  const handleMenu = () => {}
+  const handleMenu = (value) => {
+    const newSlides = [...slides]
+    if (newSlides && newSlides[selected]) {
+      newSlides[selected].type = value
+    }
+    questionService.updateQuestion({
+      id: slides[selected]?.id,
+      type: value,
+    })
+    setSlides(newSlides)
+  }
 
   const removeOption = (targetIdx, targetId) => {
-    answerService.deleteAnswer({id: targetId})
+    answerService.deleteAnswer({ id: targetId })
     const newSlides = [...slides]
     if (newSlides && newSlides[selected]) {
       newSlides[selected].options = options.filter(
@@ -69,20 +97,21 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
   }
 
   const addNewOption = () => {
-    answerService.createAnswer(slides[selected].id, { answer: '' })
-    .then(res => {
-      const answer = res.data
-      const newSlides = [...slides]
-      newSlides[selected].options = [
-        ...options,
-        {
-          ...answer,
-          value: answer.answer,
-          checked: false,
-        },
-      ]
-      setSlides(newSlides)
-    })
+    answerService
+      .createAnswer(slides[selected].id, { answer: '' })
+      .then((res) => {
+        const answer = res.data
+        const newSlides = [...slides]
+        newSlides[selected].options = [
+          ...options,
+          {
+            ...answer,
+            value: answer.answer,
+            checked: false,
+          },
+        ]
+        setSlides(newSlides)
+      })
   }
   const optionsMapped = () => {
     return options?.map((option) => option.value)
@@ -95,7 +124,7 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
     const newSlide = [...slides]
     newSlide[selected].options[idx].checked = e.target.checked
     setSlides(newSlide)
-    onCheckBox();
+    onCheckBox()
   }
   useEffect(() => {
     form.resetFields()
@@ -109,6 +138,8 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
     // )
     // form.setFieldValue({ formOptions })
   }, [])
+
+  const isHiddenItem = ['heading', 'paragraph'].includes(type)
 
   return (
     <div
@@ -141,17 +172,39 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
           Slides type
         </h2>
         <Select
-          defaultValue="multiple choices"
+          defaultValue={type}
           style={{ width: '100%', fontSize: 32 }}
           onChange={handleMenu}
           options={[
             {
-              value: 'multiple choices',
+              value: 'multiple',
               label: (
                 <div style={{ display: 'flex' }}>
                   <BarChartOutlined style={{ fontSize: 32 }}></BarChartOutlined>
                   <p style={{ fontSize: 20, margin: '1px 0 0 10px' }}>
-                    Multiple choices
+                    multiple
+                  </p>
+                </div>
+              ),
+            },
+            {
+              value: 'heading',
+              label: (
+                <div style={{ display: 'flex' }}>
+                  <BarChartOutlined style={{ fontSize: 32 }}></BarChartOutlined>
+                  <p style={{ fontSize: 20, margin: '1px 0 0 10px' }}>
+                    heading
+                  </p>
+                </div>
+              ),
+            },
+            {
+              value: 'paragraph',
+              label: (
+                <div style={{ display: 'flex' }}>
+                  <BarChartOutlined style={{ fontSize: 32 }}></BarChartOutlined>
+                  <p style={{ fontSize: 20, margin: '1px 0 0 10px' }}>
+                    paragraph
                   </p>
                 </div>
               ),
@@ -178,9 +231,9 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
             onBlur={(e) => onQuestionBlur(e.target.value)}
           />
         </Form.Item>
-
         <Form.Item
           label={<h2>Options</h2>}
+          hidden={isHiddenItem}
           tooltip={{
             title: 'Answers option for the question',
             icon: <InfoCircleOutlined />,
@@ -206,8 +259,12 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
                     }}
                   ></input>
                   <input
-                    placeholder={option.value === '' ? option.placeholder : ''}
-                    onChange={(e) => onOptionValueChanged(e, idx, option.id)}
+                    placeholder={
+                      option.value === '' ? option.placeholder : ''
+                    }
+                    onChange={(e) =>
+                      onOptionValueChanged(e, idx, option.id)
+                    }
                     onBlur={(e) => onOptionValueBlur(e, idx, option.id)}
                     value={option?.value}
                     className="option-input"
@@ -222,35 +279,8 @@ const RightSidebar = ({ slides, selected, setSlides, display, setDisplay, onChec
               </div>
             )
           })}
-          {/* {options.map((option, idx) => {
-            console.log(option.value)
-            return (
-              <Form.Item
-                label=""
-                style={{ margin: '15px 0 0 0', fontSize: '20px' }}
-                key={idx}
-                name={`option${idx}`}
-                initialValue={option.value}
-              >
-                <div style={{ display: 'flex' }}>
-                  <Input
-                    placeholder={option.value === '' ? option.name : ''}
-                    onChange={(e) => onOptionValueChanged(e, idx)}
-                    style={{ fontSize: 16 }}
-                    id={`option${idx}`}
-                  />
-                  <button
-                    onClick={() => removeOption(idx)}
-                    style={{ margin: '0 0 0 5px' }}
-                  >
-                    <DeleteOutlined></DeleteOutlined>
-                  </button>
-                </div>
-              </Form.Item>
-            )
-          })} */}
         </Form.Item>
-        <Form.Item>
+        <Form.Item hidden={isHiddenItem}>
           <Button className="add-option-btn" onClick={() => addNewOption()}>
             Add option
           </Button>

@@ -12,7 +12,7 @@ const SmallSlide = ({ number, slide, isSelected, onSlideClick }) => {
         <h4>{number + 1}</h4>
       </div>
       <SlideContent
-        type="multiple choices"
+        type="multiple"
         size="small"
         slide={slide}
       ></SlideContent>

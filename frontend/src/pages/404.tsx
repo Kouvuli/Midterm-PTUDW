@@ -6,7 +6,7 @@ import { Redirect } from 'umi'
 import { t } from "@lingui/macro"
 
 const Error = () => (
-  <Redirect to={t`/dashboard`} />
+  <p>404</p>
 )
 
 export default Error
