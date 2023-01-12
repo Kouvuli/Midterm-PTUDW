@@ -18,6 +18,9 @@ const createPresentation = async (ownerId, presentation) => {
     author: {
       id: ownerId,
     },
+    group: {
+      id: presentation.group_id,
+    }
   }
   const response = await axios.post(`${baseUrl}/api/v1/presentations`, body)
   return response.data
