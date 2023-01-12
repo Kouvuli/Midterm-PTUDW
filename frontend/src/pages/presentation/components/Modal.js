@@ -85,13 +85,14 @@ class PresentationModal extends PureComponent {
             <Input />
           </FormItem>
           <FormItem
+            hidden={modalType !== 'create'}
             name="group_id"
             rules={[{ required: true }]}
             label={t`Group ID`}
             hasFeedback
             {...formItemLayout}
           >
-            <Input disabled={modalType !== 'create'} />
+            <Input />
           </FormItem>
           {modalType !== 'create' && (
             <FormItem

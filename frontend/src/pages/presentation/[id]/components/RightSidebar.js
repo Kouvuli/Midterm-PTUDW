@@ -35,6 +35,7 @@ const RightSidebar = ({
   }
 
   const selectedSlide = slides?.[selected] || {}
+  console.log('selectedSlide question', selectedSlide.question)
 
   const { type } = selectedSlide
 
@@ -227,6 +228,8 @@ const RightSidebar = ({
           <Input
             style={{ fontSize: 16 }}
             placeholder="Your question"
+            required
+            value={selectedSlide?.question}
             onChange={(e) => onQuestionChanged(e.target.value)}
             onBlur={(e) => onQuestionBlur(e.target.value)}
           />
@@ -259,6 +262,7 @@ const RightSidebar = ({
                     }}
                   ></input>
                   <input
+                    required
                     placeholder={
                       option.value === '' ? option.placeholder : ''
                     }

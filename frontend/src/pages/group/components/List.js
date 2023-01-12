@@ -39,6 +39,15 @@ class List extends PureComponent {
         render: (text) => <Avatar style={{ marginLeft: 8 }} src={text} />,
       },
       {
+        title: <Trans>ID</Trans>,
+        dataIndex: 'id',
+        key: 'id',
+        width: '10%',
+        render: (text, record) => (
+          <Link to={`/group/${record.id}`}>{text}</Link>
+        ),
+      },
+      {
         title: <Trans>Name</Trans>,
         dataIndex: 'name',
         key: 'name',
