@@ -25,14 +25,23 @@ class Presentation extends PureComponent {
   componentDidMount() {
     const auth = store.get('auth')
     const { id } = auth
-    presentationService
-      .getPresentationList()
-      .then((res) => {
-        console.log(res.data)
-        this.setState({ presentations: res.data })
-      })
-      .catch((e) => console.log(e))
+
+    const initialLoad = async () => {
+      const { data } = await presentationService.getPresentationList()
+      const presentations = await Promise.all(data.map(async (present) => {
+        const { group } = present
+        const { data } = await groupService.getUserByGroupId(group.id)
+        const members = data
+        const valid = members.find(member => member.id === id && (member.role.name === "OWNER" || member.role.name === "CO-OWNER"))
+        if (valid) {
+          return present
+        }
+      }))
+      this.setState({ presentations: presentations.filter(present => present) })
+    }
+    initialLoad();
   }
+
 
   handleRefresh = (newQuery) => {
     const { location } = this.props
