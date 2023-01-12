@@ -172,7 +172,7 @@ const RightSidebar = ({
           Slides type
         </h2>
         <Select
-          defaultValue={type}
+          defaultValue="multiple"
           style={{ width: '100%', fontSize: 32 }}
           onChange={handleMenu}
           options={[

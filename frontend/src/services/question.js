@@ -20,9 +20,9 @@ const createQuestion = async (presentationId, data) => {
 
 const updateQuestion = async (question) => {
   const body = {
-    question: question.question || "",
-    answer: question.answer || "",
-    type: question.type || "",
+    question: question.question,
+    answer: question.answer,
+    type: question.type,
   }
   const response = await axios.put(`${baseUrl}/api/v1/questions/${question.id}`, body)
   return response.data

@@ -68,7 +68,7 @@ const PresentationTeacherView = ({ roomId }) => {
     const data = []
     if (totalArr.length !== 0) {
       slides?.[current]?.options.forEach((option, idx) =>
-        data.push({ name: option.value, total: totalArr[idx].total })
+        data.push({ name: option.value, total: totalArr?.[idx]?.total })
       )
     }
 
@@ -125,7 +125,9 @@ const PresentationTeacherView = ({ roomId }) => {
       }
       if (messageReceived.message === 'vote') {
         const newArr = [...totalArr]
-        newArr[messageReceived.selectedOption].total += 1
+        if (newArr?.[messageReceived?.selectedOption]) {
+          newArr[messageReceived.selectedOption].total += 1
+        }
 
         setTotalArr(newArr)
       }
