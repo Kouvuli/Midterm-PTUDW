@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins="*",maxAge = 3600)
@@ -41,13 +42,17 @@ public class QuestionController {
     @GetMapping("/{id}")
     ResponseEntity<ResponeObject> getQuestionsByPresentationId(@PathVariable Long id){
         Optional<Presentation> presentation= presentationService.getPresentationById(id);
-        return presentation.isPresent()?
-                ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponeObject("ok","Get questions succesfully",presentation.get().getQuestions())
-                ):
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponeObject("failed","Cannot find presentation for this question","")
+        if(!presentation.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponeObject("failed","Cannot find presentation for this question","")
+            );
+        }
+        List<Question> list=questionService.getQuestionPresentationId(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponeObject("ok","Get questions succesfully",list)
                 );
+
     }
 
     @PostMapping("")

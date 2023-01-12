@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins="*",maxAge = 3600)
@@ -31,13 +32,16 @@ public class AnswerController {
     @GetMapping("/{id}")
     ResponseEntity<ResponeObject> getOptionsByQuestionId(@PathVariable Long id){
         Optional<Question> question= questionService.getQuestionById(id);
-        return question.isPresent()?
-                ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponeObject("ok","Get questions succesfully",question.get().getOptions())
-                ):
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponeObject("failed","Cannot find question for this answer","")
-                );
+        if(!question.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponeObject("failed","Cannot find question for this answer","")
+            );
+        }
+        List<Answer> list=answerService.getAnswersByQuestionId(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponeObject("ok","Get answers succesfully",list)
+        );
     }
 
     @PostMapping("")
